@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
+  padding: 10rem;
   min-height: 100vh;
 }
 
@@ -97,11 +97,14 @@
 
 .center::before,
 .center::after {
-  content: '';
+  content: "";
   left: 50%;
   position: absolute;
   filter: blur(45px);
   transform: translateZ(0);
+}
+.title {
+  font-size: 4rem;
 }
 
 .logo {
@@ -226,4 +229,17 @@
   to {
     transform: rotate(0deg);
   }
+}
+.myMessage {
+  background-color: #00ff00; /* Replace with your desired background color for your messages */
+  text-align: right;
+  padding: 8px;
+  margin-bottom: 4px;
+}
+
+.otherUserMessage {
+  background-color: #92459e; /* Replace with your desired background color for other users' messages */
+  text-align: left;
+  padding: 8px;
+  margin-bottom: 4px;
 }
