@@ -1,4 +1,3 @@
-// ChatComponent.js
 import React, { useContext, useEffect, useState } from "react";
 import { MessageContext } from "./MessageContext";
 import { useScaledrone } from "./ScaledroneContext";
@@ -51,8 +50,6 @@ const ChatComponent = () => {
 
       room.on("message", (messageData) => {
         console.log("Received message:", messageData);
-
-        // Add the message to the context with sender information
         messageContext.addMessage({
           message: messageData.data.message,
           sender: messageData.data.sender,
@@ -84,6 +81,32 @@ const ChatComponent = () => {
     }
   }, [user, drone, messageContext]);
 
+  const renderMessage = (messageData, index, messages) => {
+    const isMyMessage = messageData.sender === user?.uid;
+    const isDuplicate =
+      index > 0 &&
+      messages[index - 1]?.sender === messageData.sender &&
+      messages[index - 1]?.message === messageData.message;
+
+    return !isDuplicate ? (
+      <div
+        key={messageData.score}
+        className={
+          isMyMessage
+            ? `${styles.message} ${styles.myMessage}`
+            : `${styles.message} ${styles.otherUserMessage}`
+        }
+      >
+        {messageData && messageData.message ? (
+          <div>
+            <p>{messageData.message}</p>
+            <p>Sent by: {isMyMessage ? "You" : messageData.senderUsername}</p>
+          </div>
+        ) : null}
+      </div>
+    ) : null;
+  };
+
   return (
     <Container fluid className={styles.main}>
       {user ? (
@@ -101,32 +124,19 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
-              {messageContext.messages.map((messageData) => {
-                console.log("Rendering message:", messageData);
-
-                return (
-                  <div
-                    key={messageData.score}
-                    className={
-                      messageData.sender === user?.uid
-                        ? `${styles.message} ${styles.myMessage}`
-                        : `${styles.message} ${styles.otherUserMessage}`
-                    }
-                  >
-                    {messageData && messageData.message ? (
-                      <div>
-                        <p>{messageData.message}</p>
-                        <p>
-                          Sent by:{" "}
-                          {messageData.sender === user?.uid
-                            ? "You"
-                            : userData?.username}
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              })}
+              {messageContext.messages.map((messageData, index, messages) =>
+                renderMessage(
+                  {
+                    ...messageData,
+                    senderUsername:
+                      userData?.uid === messageData.message.sender
+                        ? "You"
+                        : userData?.username,
+                  },
+                  index,
+                  messages
+                )
+              )}
             </Col>
             <Button
               variant="primary"
