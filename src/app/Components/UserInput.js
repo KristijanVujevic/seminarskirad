@@ -11,6 +11,7 @@ const UserInput = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Handling submit...");
 
     // Get the current user
     const currentUser = auth.currentUser;
