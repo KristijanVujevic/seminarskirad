@@ -50,7 +50,10 @@ const ChatComponent = () => {
 
       room.on("message", (messageData) => {
         console.log("Received message:", messageData);
-        messageContext.setMessage(messageData.data.message);
+        messageContext.addMessage({
+          message: messageData.data.message,
+          sender: messageData.data.sender,
+        });
       });
 
       drone.on("error", (error) => console.error(error));
@@ -79,11 +82,8 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
-    const isMyMessage = messageData.message.sender === user?.uid;
-    const senderUsername =
-      messageData.message.sender === user?.uid
-        ? "You"
-        : messageData.senderUsername;
+    const isMyMessage = messageData.sender === user?.uid;
+    const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
 
     return (
       <div
@@ -94,9 +94,9 @@ const ChatComponent = () => {
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        {messageData && messageData.message.message ? (
+        {messageData && messageData.message ? (
           <div>
-            <p>{messageData.message.message}</p>
+            <p>{messageData.message}</p>
             <p>Sent by: {senderUsername}</p>
           </div>
         ) : null}
