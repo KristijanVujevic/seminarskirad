@@ -83,8 +83,13 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     // Check if messageData and its properties are defined
-    if (messageData && messageData.message && messageData.message.sender) {
-      const isMyMessage = messageData.message.sender === user?.uid;
+    if (
+      messageData &&
+      messageData.data &&
+      messageData.data.message &&
+      messageData.data.sender
+    ) {
+      const isMyMessage = messageData.data.sender === user?.uid;
 
       return (
         <div
@@ -95,12 +100,12 @@ const ChatComponent = () => {
               : `${styles.message} ${styles.otherUserMessage}`
           }
         >
-          {console.log(messageData.message.sender)}
+          {console.log(messageData.data.sender)}
           <div>
-            <p>{messageData.message.message}</p>
+            <p>{messageData.data.message}</p>
             <p>
               Sent by:{" "}
-              {userData?.uid === messageData.message.sender
+              {userData?.uid === messageData.data.sender
                 ? "You"
                 : userData?.username}
             </p>
