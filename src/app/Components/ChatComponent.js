@@ -79,7 +79,7 @@ const ChatComponent = () => {
         }
       };
     }
-  }, [user, drone, messageContext]);
+  }, [user, drone]);
 
   const renderMessage = (messageData) => {
     if (!messageData) {
