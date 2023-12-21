@@ -82,42 +82,21 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
-    console.log("Rendering message:", messageData);
-
-    // Check if messageData.data and its properties are defined
-    if (
-      messageData &&
-      messageData.data &&
-      messageData.data.message &&
-      messageData.data.sender
-    ) {
-      console.warn("Invalid message data:", messageData);
+    if (!messageData) {
       return null;
     }
 
-    const isMyMessage = messageData.data.sender === user?.uid;
+    const { data } = messageData;
 
     return (
-      <div
-        key={messageData.id || Math.random()} // Use a unique identifier or fallback to Math.random()
-        className={
-          isMyMessage
-            ? `${styles.message} ${styles.myMessage}`
-            : `${styles.message} ${styles.otherUserMessage}`
-        }
-      >
-        <div>
-          <p>{messageData.data.message}</p>
-          <p>
-            Sent by:{" "}
-            {userData?.uid === messageData.data.sender
-              ? "You"
-              : userData?.username}
-          </p>
-        </div>
+      <div key={messageData.id}>
+        <p>{data.message}</p>
+        <p>Sent by: {data.sender}</p>
       </div>
     );
   };
+
+  const messages = messageContext.messages.map(renderMessage);
 
   return (
     <Container fluid className={styles.main}>
