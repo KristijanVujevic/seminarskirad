@@ -8,7 +8,10 @@ const MessageContextProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
 
   const addMessage = (newMessage) => {
-    setMessages((prevMessages) => [...prevMessages, { message: newMessage }]);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { message: newMessage.message, sender: newMessage.sender },
+    ]);
   };
 
   return (
