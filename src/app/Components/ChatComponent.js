@@ -44,7 +44,7 @@ const ChatComponent = () => {
         if (error) {
           console.error(error);
         } else {
-          console.log(`Connected to room ${room}`);
+          console.log(`Connected to room`);
         }
       });
 
@@ -80,6 +80,8 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     const isMyMessage = messageData.message.sender === user?.uid;
+    const senderUsername =
+      messageData.message.sender === user?.uid ? "You" : userData?.username;
 
     return (
       <div
@@ -90,12 +92,10 @@ const ChatComponent = () => {
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        {console.log(messageData.message.sender)}
         {messageData && messageData.message.message ? (
           <div>
             <p>{messageData.message.message}</p>
-
-            <p>Sent by: {userData.username}</p>
+            <p>Sent by: {senderUsername}</p>
           </div>
         ) : null}
       </div>
