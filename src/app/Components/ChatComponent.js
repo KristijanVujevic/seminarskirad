@@ -83,10 +83,11 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     const isMyMessage = messageData.message.sender === user?.uid;
+    const key = `${messageData.message.sender}-${messageData.timestamp}`;
 
     return (
       <div
-        key={messageData.score}
+        key={key}
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`
