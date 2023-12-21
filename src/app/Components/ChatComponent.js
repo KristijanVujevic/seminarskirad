@@ -44,7 +44,7 @@ const ChatComponent = () => {
         if (error) {
           console.error(error);
         } else {
-          console.log("Connected to room");
+          console.log(`Connected to room ${room}`);
         }
       });
 
@@ -71,7 +71,6 @@ const ChatComponent = () => {
       fetchUserData();
 
       return () => {
-        room.unsubscribe();
         if (drone.client) {
           drone.client.close();
         }
