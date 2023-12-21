@@ -82,32 +82,35 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
-    const isMyMessage = messageData?.data?.sender === user?.uid;
-    const key = `${messageData?.data?.sender}-${messageData?.timestamp}`;
+    // Check if messageData and its properties are defined
+    if (messageData && messageData.message && messageData.message.sender) {
+      const isMyMessage = messageData.message.sender === user?.uid;
 
-    if (
-      messageData?.data?.message !== undefined &&
-      messageData?.data?.sender !== undefined
-    ) {
       return (
         <div
-          key={key}
+          key={messageData.score}
           className={
             isMyMessage
               ? `${styles.message} ${styles.myMessage}`
               : `${styles.message} ${styles.otherUserMessage}`
           }
         >
-          {console.log(messageData?.data?.sender)}
+          {console.log(messageData.message.sender)}
           <div>
-            <p>{messageData.data.message}</p>
-            <p>Sent by: {isMyMessage ? "You" : userData?.username}</p>
+            <p>{messageData.message.message}</p>
+            <p>
+              Sent by:{" "}
+              {userData?.uid === messageData.message.sender
+                ? "You"
+                : userData?.username}
+            </p>
           </div>
         </div>
       );
+    } else {
+      // Handle the case where messageData or its properties are undefined
+      return null;
     }
-
-    return null;
   };
 
   return (
