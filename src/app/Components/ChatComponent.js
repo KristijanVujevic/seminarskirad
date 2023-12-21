@@ -94,10 +94,10 @@ const ChatComponent = () => {
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        {console.log(messageData.message.sender)}
-        {messageData && messageData.message.message ? (
+        {console.log(messageData.data.sender)}
+        {messageData && messageData.data.message ? (
           <div>
-            <p>{messageData.message.message}</p>
+            <p>{messageData.message}</p>
             <p>Sent by: {isMyMessage ? "You" : userData.username}</p>
           </div>
         ) : null}
