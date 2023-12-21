@@ -81,7 +81,9 @@ const ChatComponent = () => {
   const renderMessage = (messageData) => {
     const isMyMessage = messageData.message.sender === user?.uid;
     const senderUsername =
-      messageData.message.sender === user?.uid ? "You" : userData?.username;
+      messageData.message.sender === user?.uid
+        ? "You"
+        : messageData.senderUsername;
 
     return (
       <div
@@ -120,7 +122,13 @@ const ChatComponent = () => {
           <Col>
             <Col className={styles.messagesContainer}>
               {messageContext.messages.map((messageData) =>
-                renderMessage(messageData)
+                renderMessage({
+                  ...messageData,
+                  senderUsername:
+                    userData?.uid === messageData.message.sender
+                      ? "You"
+                      : userData?.username,
+                })
               )}
             </Col>
             <Button
