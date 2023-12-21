@@ -33,7 +33,6 @@ const UserInput = () => {
       // Add the message to the context with sender information
       messageContext.addMessage({
         message: message,
-        sender: currentUser.uid,
       });
     } else {
       console.log("User not logged in or drone not initialized");
