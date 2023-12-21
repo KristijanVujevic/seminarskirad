@@ -93,7 +93,7 @@ const ChatComponent = () => {
 
       return (
         <div
-          key={messageData.score}
+          key={messageData.id} // Assuming your messages have an 'id' property
           className={
             isMyMessage
               ? `${styles.message} ${styles.myMessage}`
