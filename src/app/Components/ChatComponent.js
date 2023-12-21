@@ -82,7 +82,9 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
-    console.log("messageData", messageData);
+    if (!messageData) {
+      return null;
+    }
 
     const isMyMessage = messageData.sender === user?.uid;
     const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
@@ -96,7 +98,7 @@ const ChatComponent = () => {
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        {messageData && messageData.message ? (
+        {messageData.message ? (
           <div>
             <p>{messageData.message}</p>
             <p>Sent by: {senderUsername}</p>
