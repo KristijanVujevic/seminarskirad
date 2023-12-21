@@ -82,41 +82,35 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
-    // Check if messageData and its properties are defined
-    console.log("Messages in context:", messageContext.messages);
-    if (
-      messageData &&
-      messageData.data &&
-      messageData.data.message &&
-      messageData.data.sender
-    ) {
-      const isMyMessage = messageData.data.sender === user?.uid;
+    console.log("Rendering message:", messageData);
 
-      return (
-        <div
-          key={messageData.id} // Assuming your messages have an 'id' property
-          className={
-            isMyMessage
-              ? `${styles.message} ${styles.myMessage}`
-              : `${styles.message} ${styles.otherUserMessage}`
-          }
-        >
-          {console.log(messageData.data.sender)}
-          <div>
-            <p>{messageData.data.message}</p>
-            <p>
-              Sent by:{" "}
-              {userData?.uid === messageData.data.sender
-                ? "You"
-                : userData?.username}
-            </p>
-          </div>
-        </div>
-      );
-    } else {
-      // Handle the case where messageData or its properties are undefined
+    if (!messageData || !messageData.data) {
+      console.warn("Invalid message data:", messageData);
       return null;
     }
+
+    const isMyMessage = messageData.data.sender === user?.uid;
+
+    return (
+      <div
+        key={messageData.id} // Assuming your messages have an 'id' property
+        className={
+          isMyMessage
+            ? `${styles.message} ${styles.myMessage}`
+            : `${styles.message} ${styles.otherUserMessage}`
+        }
+      >
+        <div>
+          <p>{messageData.data.message}</p>
+          <p>
+            Sent by:{" "}
+            {userData?.uid === messageData.data.sender
+              ? "You"
+              : userData?.username}
+          </p>
+        </div>
+      </div>
+    );
   };
 
   return (
