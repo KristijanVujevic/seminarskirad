@@ -101,28 +101,32 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
-              {messageContext.messages.map((messageData) => (
-                <div
-                  key={messageData.score}
-                  className={
-                    messageData.sender === user?.uid
-                      ? `${styles.message} ${styles.myMessage}`
-                      : `${styles.message} ${styles.otherUserMessage}`
-                  }
-                >
-                  {messageData && messageData.message ? (
-                    <div>
-                      <p>{messageData.message}</p>
-                      <p>
-                        Sent by:{" "}
-                        {messageData.sender === user?.uid
-                          ? "You"
-                          : userData?.username}
-                      </p>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+              {messageContext.messages.map((messageData) => {
+                console.log("Rendering message:", messageData);
+
+                return (
+                  <div
+                    key={messageData.score}
+                    className={
+                      messageData.sender === user?.uid
+                        ? `${styles.message} ${styles.myMessage}`
+                        : `${styles.message} ${styles.otherUserMessage}`
+                    }
+                  >
+                    {messageData && messageData.message ? (
+                      <div>
+                        <p>{messageData.message}</p>
+                        <p>
+                          Sent by:{" "}
+                          {messageData.sender === user?.uid
+                            ? "You"
+                            : userData?.username}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
             </Col>
             <Button
               variant="primary"
