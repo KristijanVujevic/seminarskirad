@@ -50,7 +50,10 @@ const ChatComponent = () => {
 
       room.on("message", (messageData) => {
         console.log("Received message:", messageData);
-        messageContext.setMessage(messageData.data.message);
+        messageContext.addMessage({
+          message: messageData.data.message,
+          sender: messageData.data.sender,
+        });
       });
 
       drone.on("error", (error) => console.error(error));
