@@ -97,8 +97,7 @@ const ChatComponent = () => {
         {messageData && messageData.message.message ? (
           <div>
             <p>{messageData.message.message}</p>
-
-            <p>Sent by: {userData.username}</p>
+            <p>Sent by: {isMyMessage ? "You" : userData.username}</p>
           </div>
         ) : null}
       </div>
