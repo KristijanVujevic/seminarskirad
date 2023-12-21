@@ -85,24 +85,29 @@ const ChatComponent = () => {
     const isMyMessage = messageData?.data?.sender === user?.uid;
     const key = `${messageData?.data?.sender}-${messageData?.timestamp}`;
 
-    return (
-      <div
-        key={key}
-        className={
-          isMyMessage
-            ? `${styles.message} ${styles.myMessage}`
-            : `${styles.message} ${styles.otherUserMessage}`
-        }
-      >
-        {console.log(messageData?.data?.sender)}
-        {messageData?.data && messageData?.data?.message ? (
+    if (
+      messageData?.data?.message !== undefined &&
+      messageData?.data?.sender !== undefined
+    ) {
+      return (
+        <div
+          key={key}
+          className={
+            isMyMessage
+              ? `${styles.message} ${styles.myMessage}`
+              : `${styles.message} ${styles.otherUserMessage}`
+          }
+        >
+          {console.log(messageData?.data?.sender)}
           <div>
             <p>{messageData.data.message}</p>
             <p>Sent by: {isMyMessage ? "You" : userData?.username}</p>
           </div>
-        ) : null}
-      </div>
-    );
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
