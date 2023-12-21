@@ -115,7 +115,7 @@ const ChatComponent = () => {
                       <p>{messageData.message}</p>
                       <p>
                         Sent by:{" "}
-                        {userData?.uid === messageData.sender
+                        {messageData.sender === user?.uid
                           ? "You"
                           : userData?.username}
                       </p>
