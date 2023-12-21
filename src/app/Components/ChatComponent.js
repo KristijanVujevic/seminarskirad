@@ -81,14 +81,13 @@ const ChatComponent = () => {
     }
   }, [user, drone, messageContext]);
 
-  const renderMessage = (messageData, index, messages) => {
-    const isMyMessage = messageData.sender === user?.uid;
-    const isDuplicate =
-      index > 0 &&
-      messages[index - 1]?.sender === messageData.sender &&
-      messages[index - 1]?.message === messageData.message;
+  const renderMessage = (messageData) => {
+    console.log("messageData", messageData);
 
-    return !isDuplicate ? (
+    const isMyMessage = messageData.sender === user?.uid;
+    const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
+
+    return (
       <div
         key={messageData.score}
         className={
@@ -100,11 +99,11 @@ const ChatComponent = () => {
         {messageData && messageData.message ? (
           <div>
             <p>{messageData.message}</p>
-            <p>Sent by: {isMyMessage ? "You" : messageData.senderUsername}</p>
+            <p>Sent by: {senderUsername}</p>
           </div>
         ) : null}
       </div>
-    ) : null;
+    );
   };
 
   return (
@@ -124,18 +123,14 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
-              {messageContext.messages.map((messageData, index, messages) =>
-                renderMessage(
-                  {
-                    ...messageData,
-                    senderUsername:
-                      userData?.uid === messageData.message.sender
-                        ? "You"
-                        : userData?.username,
-                  },
-                  index,
-                  messages
-                )
+              {messageContext.messages.map((messageData) =>
+                renderMessage({
+                  ...messageData,
+                  senderUsername:
+                    userData?.uid === messageData.message.sender
+                      ? "You"
+                      : userData?.username,
+                })
               )}
             </Col>
             <Button
