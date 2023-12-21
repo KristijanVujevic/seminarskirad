@@ -17,16 +17,7 @@ const UserInput = () => {
     const currentUser = auth.currentUser;
 
     if (currentUser && drone) {
-      console.log("Sending message:", message);
-
-      // Use room.publish to send a message to the room
-      drone.publish({
-        room: "observable-my-room", // Replace with your room name
-        message: {
-          sender: currentUser.uid,
-          message: message,
-        },
-      });
+      console.log("Sending message to context:", message);
 
       // Reset the textarea after submitting, if needed
       setMessage("");
