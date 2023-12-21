@@ -84,7 +84,13 @@ const ChatComponent = () => {
   const renderMessage = (messageData) => {
     console.log("Rendering message:", messageData);
 
-    if (!messageData || !messageData.data) {
+    // Check if messageData.data and its properties are defined
+    if (
+      messageData &&
+      messageData.data &&
+      messageData.data.message &&
+      messageData.data.sender
+    ) {
       console.warn("Invalid message data:", messageData);
       return null;
     }
