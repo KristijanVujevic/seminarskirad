@@ -93,7 +93,7 @@ const ChatComponent = () => {
 
     return (
       <div
-        key={messageData.id} // Assuming your messages have an 'id' property
+        key={messageData.id || Math.random()} // Use a unique identifier or fallback to Math.random()
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`

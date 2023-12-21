@@ -1,8 +1,6 @@
 // MessageContext.js
 import { createContext, useState } from "react";
 
-const MessageContext = createContext();
-
 const MessageContextProvider = ({ children }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -13,6 +11,8 @@ const MessageContextProvider = ({ children }) => {
       { message: newMessage.message, sender: newMessage.sender },
     ]);
   };
+
+  console.log("Messages in context:", messages); // Log the messages
 
   return (
     <MessageContext.Provider
