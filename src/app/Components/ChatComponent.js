@@ -38,7 +38,7 @@ const ChatComponent = () => {
 
   useEffect(() => {
     if (user && drone) {
-      const room = drone.subscribe("my-room");
+      const room = drone.subscribe("observable-my-room");
 
       room.on("open", (error) => {
         if (error) {

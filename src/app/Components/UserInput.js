@@ -1,10 +1,13 @@
+// UserInput.js
 import React, { useContext, useState } from "react";
 import { MessageContext } from "./MessageContext";
 import { auth } from "@/app/Components/firebase";
+import { useScaledrone } from "./ScaledroneContext";
 
 const UserInput = () => {
   const messageContext = useContext(MessageContext);
-  const [poruka, setPoruka] = useState("");
+  const { drone } = useScaledrone();
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,17 +15,26 @@ const UserInput = () => {
     // Get the current user
     const currentUser = auth.currentUser;
 
-    if (currentUser) {
-      // Log the message to the console
-      console.log(poruka);
+    if (currentUser && drone) {
+      // Use room.publish to send a message to the room
+      drone.publish({
+        room: "observable-my-room", // Replace with your room name
+        message: {
+          sender: currentUser.uid,
+          message: message,
+        },
+      });
 
       // Reset the textarea after submitting, if needed
-      setPoruka("");
+      setMessage("");
 
       // Add the message to the context with sender information
-      messageContext.addMessage({ message: poruka, sender: currentUser.uid });
+      messageContext.addMessage({
+        message: message,
+        sender: currentUser.uid,
+      });
     } else {
-      console.log("User not logged in");
+      console.log("User not logged in or drone not initialized");
     }
   };
 
@@ -32,8 +44,8 @@ const UserInput = () => {
         <textarea
           rows={3}
           placeholder="Enter message"
-          value={poruka}
-          onChange={(e) => setPoruka(e.target.value)}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
         />
         <button type="submit">Send</button>
       </form>
