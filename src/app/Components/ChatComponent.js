@@ -83,6 +83,7 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     // Check if messageData and its properties are defined
+    console.log("Messages in context:", messageContext.messages);
     if (
       messageData &&
       messageData.data &&
@@ -135,9 +136,10 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
-              {messageContext.messages.map((messageData) =>
-                renderMessage(messageData)
-              )}
+              {messageContext.messages.map((messageData) => {
+                console.log("Rendering message:", messageData);
+                return renderMessage(messageData);
+              })}
             </Col>
             <Button
               variant="primary"
