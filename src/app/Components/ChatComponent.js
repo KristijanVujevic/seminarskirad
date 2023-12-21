@@ -82,21 +82,27 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
-    if (!messageData) {
-      return null;
-    }
-
-    const { data } = messageData;
+    const isMyMessage = messageData.sender === user?.uid;
+    const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
 
     return (
-      <div key={messageData.id}>
-        <p>{data.message}</p>
-        <p>Sent by: {data.sender}</p>
+      <div
+        key={messageData.score}
+        className={
+          isMyMessage
+            ? `${styles.message} ${styles.myMessage}`
+            : `${styles.message} ${styles.otherUserMessage}`
+        }
+      >
+        {messageData && messageData.message ? (
+          <div>
+            <p>{messageData.message}</p>
+            <p>Sent by: {senderUsername}</p>
+          </div>
+        ) : null}
       </div>
     );
   };
-
-  const messages = messageContext.messages.map(renderMessage);
 
   return (
     <Container fluid className={styles.main}>
@@ -115,10 +121,15 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
-              {messageContext.messages.map((messageData) => {
-                console.log("Rendering message:", messageData);
-                return renderMessage(messageData);
-              })}
+              {messageContext.messages.map((messageData) =>
+                renderMessage({
+                  ...messageData,
+                  senderUsername:
+                    userData?.uid === messageData.message.sender
+                      ? "You"
+                      : userData?.username,
+                })
+              )}
             </Col>
             <Button
               variant="primary"
