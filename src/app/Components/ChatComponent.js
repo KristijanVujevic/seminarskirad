@@ -102,11 +102,11 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     const isMyMessage = messageData.sender === user?.uid;
-    const senderUsername = isMyMessage ? "You" : messageData.sender;
+    const senderUsername = isMyMessage ? "You" : "Other User";
 
     return (
       <div
-        key={messageData.id}
+        key={messageData.message}
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`

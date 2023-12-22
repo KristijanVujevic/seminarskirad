@@ -4,7 +4,6 @@ import { createContext, useState } from "react";
 const MessageContext = createContext();
 
 const MessageContextProvider = ({ children }) => {
-  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   const addMessage = (newMessage) => {
@@ -12,9 +11,7 @@ const MessageContextProvider = ({ children }) => {
   };
 
   return (
-    <MessageContext.Provider
-      value={{ message, setMessage, messages, setMessages, addMessage }}
-    >
+    <MessageContext.Provider value={{ messages, addMessage }}>
       {children}
     </MessageContext.Provider>
   );
