@@ -1,5 +1,5 @@
 // ChatComponent.js
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MessageContext } from "./MessageContext";
 import { useScaledrone } from "./ScaledroneContext";
 import { auth, firestore } from "@/app/Components/firebase";
@@ -25,12 +25,9 @@ const ChatComponent = () => {
   }, []);
 
   React.useEffect(() => {
-    console.log("Component mounted");
-
     let room;
 
     const initRoom = async () => {
-      console.log("Initializing room");
       if (!room) {
         room = drone.subscribe("observable-my-room");
 
@@ -56,7 +53,6 @@ const ChatComponent = () => {
     };
 
     const fetchUserData = async () => {
-      console.log("Fetching user data");
       try {
         const doc = await firestore.collection("users").doc(user.uid).get();
         if (doc.exists) {
@@ -75,7 +71,6 @@ const ChatComponent = () => {
     }
 
     return () => {
-      console.log("Component unmounted");
       if (room) {
         room.unsubscribe();
       }
@@ -84,36 +79,31 @@ const ChatComponent = () => {
         drone.client.close();
       }
     };
-  }, []); // empty dependency array ensures the effect runs only on mount and unmount
+  }, []);
 
-  const renderMessage = useMemo(
-    () => (messageData) => {
-      console.log("Rendering a message!");
-      const isMyMessage = messageData.sender === user?.uid;
-      const senderUsername = isMyMessage
-        ? "You"
-        : userData?.username || "Other User";
+  const renderMessage = (messageData) => {
+    console.log("Rendering a message!");
+    const isMyMessage = messageData.sender === user?.uid;
+    const senderUsername = isMyMessage ? "You" : "Other User";
 
-      return (
-        <div
-          key={messageData.id}
-          className={
-            isMyMessage
-              ? `${styles.message} ${styles.myMessage}`
-              : `${styles.message} ${styles.otherUserMessage}`
-          }
-        >
-          {messageData && messageData.message ? (
-            <div>
-              <p>{messageData.message}</p>
-              <p>Sent by: {senderUsername}</p>
-            </div>
-          ) : null}
-        </div>
-      );
-    },
-    [user, userData]
-  );
+    return (
+      <div
+        key={messageData.id}
+        className={
+          isMyMessage
+            ? `${styles.message} ${styles.myMessage}`
+            : `${styles.message} ${styles.otherUserMessage}`
+        }
+      >
+        {messageData && messageData.message ? (
+          <div>
+            <p>{messageData.message}</p>
+            <p>Sent by: {senderUsername}</p>
+          </div>
+        ) : null}
+      </div>
+    );
+  };
 
   return (
     <Container fluid className={styles.main}>
