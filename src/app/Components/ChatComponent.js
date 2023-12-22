@@ -1,5 +1,5 @@
 // ChatComponent.js
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MessageContext } from "./MessageContext";
 import { useScaledrone } from "./ScaledroneContext";
 import { auth, firestore } from "@/app/Components/firebase";
@@ -11,10 +11,10 @@ const ChatComponent = () => {
   const messageContext = useContext(MessageContext);
   const { drone } = useScaledrone();
 
-  const [user, setUser] = React.useState(null);
-  const [userData, setUserData] = React.useState(null);
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const authListener = auth.onAuthStateChanged((authUser) => {
       setUser(authUser);
     });
@@ -24,9 +24,11 @@ const ChatComponent = () => {
     };
   }, []);
 
-  React.useEffect(() => {
-    if (user && drone) {
-      const room = drone.subscribe("observable-my-room");
+  useEffect(() => {
+    let room;
+
+    const initRoom = async () => {
+      room = drone.subscribe("observable-my-room");
 
       room.on("open", (error) => {
         if (error) {
@@ -46,34 +48,40 @@ const ChatComponent = () => {
       });
 
       drone.on("error", (error) => console.error(error));
+    };
 
-      const fetchUserData = async () => {
-        try {
-          const doc = await firestore.collection("users").doc(user.uid).get();
-          if (doc.exists) {
-            setUserData(doc.data());
-          } else {
-            console.error("User document does not exist");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error.message);
+    const fetchUserData = async () => {
+      try {
+        const doc = await firestore.collection("users").doc(user.uid).get();
+        if (doc.exists) {
+          setUserData(doc.data());
+        } else {
+          console.error("User document does not exist");
         }
-      };
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+      }
+    };
 
+    if (user && drone) {
+      initRoom();
       fetchUserData();
-
-      return () => {
-        if (drone.client) {
-          drone.client.close();
-        }
-      };
     }
-  }, [user, drone, messageContext]);
 
+    return () => {
+      if (room) {
+        room.unsubscribe();
+      }
+
+      if (drone.client) {
+        drone.client.close();
+      }
+    };
+  }, [user, drone, messageContext]);
   const renderMessage = (messageData) => {
     console.log("Rendering a message!");
     const isMyMessage = messageData.sender === user?.uid;
-    const senderUsername = isMyMessage ? "You" : userData.username;
+    const senderUsername = isMyMessage ? "You" : "Other User";
 
     return (
       <div
