@@ -1,5 +1,5 @@
 // ChatComponent.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { MessageContext } from "./MessageContext";
 import { useScaledrone } from "./ScaledroneContext";
 import { auth, firestore } from "@/app/Components/firebase";
@@ -86,35 +86,34 @@ const ChatComponent = () => {
     };
   }, []); // empty dependency array ensures the effect runs only on mount and unmount
 
-  const renderMessage = (messageData) => {
-    console.log("Rendering a message!");
+  const renderMessage = useMemo(
+    () => (messageData) => {
+      console.log("Rendering a message!");
+      const isMyMessage = messageData.sender === user?.uid;
+      const senderUsername = isMyMessage
+        ? "You"
+        : userData?.username || "Other User";
 
-    // Check if the message is from the current user
-    const isMyMessage = messageData.sender === user?.uid;
-
-    // Determine the sender's username
-    const senderUsername = isMyMessage
-      ? "You"
-      : messageData.senderUsername || "Other User";
-
-    return (
-      <div
-        key={messageData.id}
-        className={
-          isMyMessage
-            ? `${styles.message} ${styles.myMessage}`
-            : `${styles.message} ${styles.otherUserMessage}`
-        }
-      >
-        {messageData && messageData.message ? (
-          <div>
-            <p>{messageData.message}</p>
-            <p>Sent by: {senderUsername}</p>
-          </div>
-        ) : null}
-      </div>
-    );
-  };
+      return (
+        <div
+          key={messageData.id}
+          className={
+            isMyMessage
+              ? `${styles.message} ${styles.myMessage}`
+              : `${styles.message} ${styles.otherUserMessage}`
+          }
+        >
+          {messageData && messageData.message ? (
+            <div>
+              <p>{messageData.message}</p>
+              <p>Sent by: {senderUsername}</p>
+            </div>
+          ) : null}
+        </div>
+      );
+    },
+    [user, userData]
+  );
 
   return (
     <Container fluid className={styles.main}>
