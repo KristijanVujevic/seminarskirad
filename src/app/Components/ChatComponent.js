@@ -73,7 +73,7 @@ const ChatComponent = () => {
         room.unsubscribe();
       }
 
-      if (drone.client) {
+      if (drone && drone.client) {
         drone.client.close();
       }
     };
