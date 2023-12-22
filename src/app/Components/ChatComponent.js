@@ -127,7 +127,7 @@ const ChatComponent = () => {
                 renderMessage({
                   ...messageData,
                   senderUsername:
-                    userData?.uid === messageData.message.sender
+                    userData?.uid === messageData.sender
                       ? "You"
                       : userData?.username,
                 })
