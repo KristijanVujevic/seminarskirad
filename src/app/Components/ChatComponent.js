@@ -25,7 +25,8 @@ const ChatComponent = () => {
   }, []);
 
   React.useEffect(() => {
-    console.log("Component re-rendered");
+    console.log("Component mounted");
+
     let room;
 
     const initRoom = async () => {
@@ -74,7 +75,7 @@ const ChatComponent = () => {
     }
 
     return () => {
-      console.log("Cleanup");
+      console.log("Component unmounted");
       if (room) {
         room.unsubscribe();
       }
@@ -83,7 +84,7 @@ const ChatComponent = () => {
         drone.client.close();
       }
     };
-  }, [user, drone, messageContext]);
+  }, []); // empty dependency array ensures the effect runs only on mount and unmount
 
   const renderMessage = (messageData) => {
     console.log("Rendering a message!");
