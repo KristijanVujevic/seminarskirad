@@ -71,8 +71,9 @@ const ChatComponent = () => {
   }, [user, drone, messageContext]);
 
   const renderMessage = (messageData) => {
+    console.log("Rendering a message!");
     const isMyMessage = messageData.sender === user?.uid;
-    const senderUsername = isMyMessage ? "You" : "Other User";
+    const senderUsername = isMyMessage ? "You" : userData.username;
 
     return (
       <div
