@@ -83,9 +83,7 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     const isMyMessage = messageData.sender === user?.uid;
-    const senderUsername = isMyMessage
-      ? "You"
-      : messageData.senderUsername || "Other User";
+    const senderUsername = isMyMessage ? "You" : "Other User";
 
     return (
       <div
