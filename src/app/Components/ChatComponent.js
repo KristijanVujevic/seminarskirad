@@ -25,9 +25,11 @@ const ChatComponent = () => {
   }, []);
 
   React.useEffect(() => {
+    console.log("Component re-rendered");
     let room;
 
     const initRoom = async () => {
+      console.log("Initializing room");
       if (!room) {
         room = drone.subscribe("observable-my-room");
 
@@ -53,6 +55,7 @@ const ChatComponent = () => {
     };
 
     const fetchUserData = async () => {
+      console.log("Fetching user data");
       try {
         const doc = await firestore.collection("users").doc(user.uid).get();
         if (doc.exists) {
@@ -71,6 +74,7 @@ const ChatComponent = () => {
     }
 
     return () => {
+      console.log("Cleanup");
       if (room) {
         room.unsubscribe();
       }
@@ -84,7 +88,9 @@ const ChatComponent = () => {
   const renderMessage = (messageData) => {
     console.log("Rendering a message!");
     const isMyMessage = messageData.sender === user?.uid;
-    const senderUsername = isMyMessage ? "You" : "Other User";
+    const senderUsername = isMyMessage
+      ? "You"
+      : userData?.username || "Other User";
 
     return (
       <div
