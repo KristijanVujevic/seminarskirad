@@ -32,8 +32,9 @@ const UserInput = () => {
 
       // Add the message to the context with sender information
       messageContext.addMessage({
+        id: Math.random().toString(36).substr(2, 9), // Generate a unique identifier
         message: message,
-        sender: currentUser.uid, // Add sender information here
+        sender: currentUser.uid,
       });
     } else {
       console.log("User not logged in or drone not initialized");

@@ -56,6 +56,7 @@ const ChatComponent = () => {
       room.on("message", (messageData) => {
         console.log("Received message:", messageData);
         messageContext.addMessage({
+          id: messageData.data.id, // Use a unique identifier
           message: messageData.data.message,
           sender: messageData.data.sender,
         });
