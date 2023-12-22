@@ -24,30 +24,32 @@ const ChatComponent = () => {
     };
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let room;
 
     const initRoom = async () => {
-      room = drone.subscribe("observable-my-room");
+      if (!room) {
+        room = drone.subscribe("observable-my-room");
 
-      room.on("open", (error) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(`Connected to room`);
-        }
-      });
-
-      room.on("message", (messageData) => {
-        console.log("Received message:", messageData);
-        messageContext.addMessage({
-          id: messageData.data.id,
-          message: messageData.data.message,
-          sender: messageData.data.sender,
+        room.on("open", (error) => {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log(`Connected to room`);
+          }
         });
-      });
 
-      drone.on("error", (error) => console.error(error));
+        room.on("message", (messageData) => {
+          console.log("Received message:", messageData);
+          messageContext.addMessage({
+            id: messageData.data.id,
+            message: messageData.data.message,
+            sender: messageData.data.sender,
+          });
+        });
+
+        drone.on("error", (error) => console.error(error));
+      }
     };
 
     const fetchUserData = async () => {
@@ -78,6 +80,7 @@ const ChatComponent = () => {
       }
     };
   }, [user, drone, messageContext]);
+
   const renderMessage = (messageData) => {
     console.log("Rendering a message!");
     const isMyMessage = messageData.sender === user?.uid;
