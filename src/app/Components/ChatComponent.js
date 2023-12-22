@@ -88,10 +88,14 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     console.log("Rendering a message!");
+
+    // Check if the message is from the current user
     const isMyMessage = messageData.sender === user?.uid;
+
+    // Determine the sender's username
     const senderUsername = isMyMessage
       ? "You"
-      : userData?.username || "Other User";
+      : messageData.senderUsername || "Other User";
 
     return (
       <div
