@@ -19,9 +19,11 @@ const UserInput = () => {
       console.log("Sending message:", message);
 
       // Use room.publish to send a message to the room
+      const messageId = Math.random().toString(36).substr(2, 9);
       drone.publish({
-        room: "observable-my-room", // Replace with your room name
+        room: "observable-my-room",
         message: {
+          id: messageId,
           sender: currentUser.uid,
           message: message,
         },
@@ -32,7 +34,7 @@ const UserInput = () => {
 
       // Add the message to the context with sender information
       messageContext.addMessage({
-        id: Math.random().toString(36).substr(2, 9), // Generate a unique identifier
+        id: messageId,
         message: message,
         sender: currentUser.uid,
       });

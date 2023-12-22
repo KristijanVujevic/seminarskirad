@@ -1,23 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+// ChatComponent.js
+import React, { useContext, useEffect } from "react";
 import { MessageContext } from "./MessageContext";
 import { useScaledrone } from "./ScaledroneContext";
-import Link from "next/link";
 import { auth, firestore } from "@/app/Components/firebase";
 import UserInput from "./UserInput";
 import { Button, Container, Row, Col } from "react-bootstrap";
-import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
 
 const ChatComponent = () => {
-  const router = useRouter();
   const messageContext = useContext(MessageContext);
   const { drone } = useScaledrone();
 
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [user, setUser] = React.useState(null);
+  const [userData, setUserData] = React.useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const authListener = auth.onAuthStateChanged((authUser) => {
       setUser(authUser);
     });
@@ -27,23 +24,10 @@ const ChatComponent = () => {
     };
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await auth.signOut();
-      router.push("/signin");
-    } catch (error) {
-      console.error("Error signing out:", error.message);
-    }
-  };
+  React.useEffect(() => {
+    if (user && drone) {
+      const room = drone.subscribe("observable-my-room");
 
-  useEffect(() => {
-    let room;
-
-    const connectToRoom = () => {
-      // Subscribe to the room
-      room = drone.subscribe("observable-my-room");
-
-      // Handle room open event
       room.on("open", (error) => {
         if (error) {
           console.error(error);
@@ -52,27 +36,17 @@ const ChatComponent = () => {
         }
       });
 
-      // Handle incoming messages
       room.on("message", (messageData) => {
         console.log("Received message:", messageData);
         messageContext.addMessage({
-          id: messageData.data.id, // Use a unique identifier
+          id: messageData.data.id,
           message: messageData.data.message,
           sender: messageData.data.sender,
         });
       });
-    };
 
-    const handleRoomError = (error) => {
-      console.error("Error connecting to room:", error);
-    };
+      drone.on("error", (error) => console.error(error));
 
-    // Set up room connection and listeners
-    if (user && drone) {
-      connectToRoom();
-      drone.on("error", handleRoomError);
-
-      // Fetch user data
       const fetchUserData = async () => {
         try {
           const doc = await firestore.collection("users").doc(user.uid).get();
@@ -88,12 +62,7 @@ const ChatComponent = () => {
 
       fetchUserData();
 
-      // Clean up when component unmounts
       return () => {
-        if (room) {
-          room.unsubscribe(); // Unsubscribe from the room
-        }
-
         if (drone.client) {
           drone.client.close();
         }
@@ -107,7 +76,7 @@ const ChatComponent = () => {
 
     return (
       <div
-        key={messageData.message}
+        key={messageData.id}
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`
@@ -142,20 +111,10 @@ const ChatComponent = () => {
           <Col>
             <Col className={styles.messagesContainer}>
               {messageContext.messages.map((messageData) =>
-                renderMessage({
-                  ...messageData,
-                  senderUsername:
-                    userData?.uid === messageData.sender
-                      ? "You"
-                      : userData?.username,
-                })
+                renderMessage(messageData)
               )}
             </Col>
-            <Button
-              variant="primary"
-              className={styles.card}
-              onClick={handleLogout}
-            >
+            <Button variant="primary" className={styles.card}>
               Logout
             </Button>
           </Col>
@@ -166,13 +125,13 @@ const ChatComponent = () => {
       ) : (
         <Row className={styles.grid}>
           <Col>
-            <Link href={"/signin"}>Sign in!</Link>
+            <p>Sign in!</p>
           </Col>
           <Col>
             <br />
           </Col>
           <Col>
-            <Link href={"/signup"}>Create an account!</Link>
+            <p>Create an account!</p>
           </Col>
         </Row>
       )}
