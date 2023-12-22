@@ -37,9 +37,13 @@ const ChatComponent = () => {
   };
 
   useEffect(() => {
-    if (user && drone) {
-      const room = drone.subscribe("observable-my-room");
+    let room;
 
+    const connectToRoom = () => {
+      // Subscribe to the room
+      room = drone.subscribe("observable-my-room");
+
+      // Handle room open event
       room.on("open", (error) => {
         if (error) {
           console.error(error);
@@ -48,6 +52,7 @@ const ChatComponent = () => {
         }
       });
 
+      // Handle incoming messages
       room.on("message", (messageData) => {
         console.log("Received message:", messageData);
         messageContext.addMessage({
@@ -55,9 +60,18 @@ const ChatComponent = () => {
           sender: messageData.data.sender,
         });
       });
+    };
 
-      drone.on("error", (error) => console.error(error));
+    const handleRoomError = (error) => {
+      console.error("Error connecting to room:", error);
+    };
 
+    // Set up room connection and listeners
+    if (user && drone) {
+      connectToRoom();
+      drone.on("error", handleRoomError);
+
+      // Fetch user data
       const fetchUserData = async () => {
         try {
           const doc = await firestore.collection("users").doc(user.uid).get();
@@ -73,7 +87,12 @@ const ChatComponent = () => {
 
       fetchUserData();
 
+      // Clean up when component unmounts
       return () => {
+        if (room) {
+          room.unsubscribe(); // Unsubscribe from the room
+        }
+
         if (drone.client) {
           drone.client.close();
         }
