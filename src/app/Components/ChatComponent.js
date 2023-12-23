@@ -76,7 +76,7 @@ const ChatComponent = () => {
         }
       };
     }
-  }, [user, drone, messageContext]);
+  }, []);
 
   const renderMessage = (messageData) => {
     const isMyMessage = messageData.message.sender === user?.uid;
