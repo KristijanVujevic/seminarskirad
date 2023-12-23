@@ -1,13 +1,28 @@
 // UserInput.js
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { MessageContext } from "./MessageContext";
 import { auth } from "@/app/Components/firebase";
 import { useScaledrone } from "./ScaledroneContext";
-
-const UserInput = () => {
+import { fetchUserData } from "@/app/Components/ChatComponent";
+const UserInput = ({ user, setUserData }) => {
   const messageContext = useContext(MessageContext);
   const { drone } = useScaledrone();
   const [message, setMessage] = useState("");
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Call the fetchUserData function from your utility file
+        await fetchUserData(user, setUserData);
+      } catch (error) {
+        console.error("Error in UserInput:", error.message);
+      }
+    };
+
+    // Call fetchData when the component mounts or when the user changes
+    fetchData();
+  }, [user, setUserData]); // Dependencies for useEffect
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +39,7 @@ const UserInput = () => {
         room: "observable-my-room",
         message: {
           id: messageId,
-          sender: currentUser.uid,
+          sender: currentUser.username,
           message: message,
         },
       });
@@ -36,7 +51,7 @@ const UserInput = () => {
       messageContext.addMessage({
         id: messageId,
         message: message,
-        sender: currentUser.uid,
+        sender: currentUser.username,
       });
     } else {
       console.log("User not logged in or drone not initialized");

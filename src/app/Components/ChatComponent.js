@@ -79,6 +79,7 @@ const ChatComponent = () => {
   }, []);
 
   const renderMessage = (messageData) => {
+    console.log(messageData);
     const isMyMessage = messageData.message.sender === user?.uid;
     const senderUsername =
       messageData.message.sender === user?.uid
@@ -87,16 +88,16 @@ const ChatComponent = () => {
 
     return (
       <div
-        key={messageData.score}
+        key={messageData.id}
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        {messageData && messageData.message.message ? (
+        {messageData && messageData.message ? (
           <div>
-            <p>{messageData.message.message}</p>
+            <p>{messageData.message}</p>
             <p>Sent by: {senderUsername}</p>
           </div>
         ) : null}
@@ -140,7 +141,7 @@ const ChatComponent = () => {
             </Button>
           </Col>
           <Col>
-            <UserInput />
+            <UserInput user={user} setUserData={setUserData} />
           </Col>
         </Row>
       ) : (
