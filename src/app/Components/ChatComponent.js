@@ -9,6 +9,20 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
 
+const fetchUserData = async (user, setUserData) => {
+  try {
+    const doc = await firestore.collection("users").doc(user.uid).get();
+    if (doc.exists) {
+      setUserData(doc.data());
+    } else {
+      console.error("User document does not exist");
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error.message);
+  }
+};
+
+export { fetchUserData };
 const ChatComponent = () => {
   const router = useRouter();
   const messageContext = useContext(MessageContext);
@@ -55,19 +69,6 @@ const ChatComponent = () => {
 
       drone.on("error", (error) => console.error(error));
 
-      const fetchUserData = async () => {
-        try {
-          const doc = await firestore.collection("users").doc(user.uid).get();
-          if (doc.exists) {
-            setUserData(doc.data());
-          } else {
-            console.error("User document does not exist");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error.message);
-        }
-      };
-
       fetchUserData();
 
       return () => {
@@ -80,11 +81,9 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     console.log(messageData);
-    const isMyMessage = messageData.message.sender === user?.uid;
+    const isMyMessage = messageData.sender === user?.uid;
     const senderUsername =
-      messageData.message.sender === user?.uid
-        ? "You"
-        : messageData.senderUsername;
+      messageData.sender === user?.uid ? "You" : messageData.senderUsername;
 
     return (
       <div
@@ -126,7 +125,7 @@ const ChatComponent = () => {
                 renderMessage({
                   ...messageData,
                   senderUsername:
-                    userData?.uid === messageData.message.sender
+                    userData?.uid === messageData.sender
                       ? "You"
                       : userData?.username,
                 })
@@ -141,7 +140,11 @@ const ChatComponent = () => {
             </Button>
           </Col>
           <Col>
-            <UserInput user={user} setUserData={setUserData} />
+            <UserInput
+              user={user}
+              userData={userData}
+              setUserData={setUserData}
+            />
           </Col>
         </Row>
       ) : (
