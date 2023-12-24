@@ -81,11 +81,13 @@ const ChatComponent = () => {
 
   const renderMessage = (messageData) => {
     if (!messageData || !messageData.message) {
+      console.log("Skipping message due to missing data or message content");
       return null;
     }
 
     const isMyMessage = messageData.sender === user?.uid;
     const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
+    console.log(messageData);
 
     return (
       <div
