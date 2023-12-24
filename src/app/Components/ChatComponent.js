@@ -80,7 +80,7 @@ const ChatComponent = () => {
   }, [user, drone]);
 
   const renderMessage = (messageData) => {
-    if (!messageData || !messageData.message) {
+    if (!messageData || !messageData.message || !messageData.data.message) {
       console.log("Skipping message due to missing data or message content");
       return null;
     }
