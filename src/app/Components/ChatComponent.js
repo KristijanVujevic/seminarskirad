@@ -80,14 +80,13 @@ const ChatComponent = () => {
   }, [user, drone]);
 
   const renderMessage = (messageData) => {
-    if (!messageData || !messageData.message || !messageData.data.message) {
+    if (!messageData || !messageData.message) {
       console.log("Skipping message due to missing data or message content");
       return null;
     }
 
     const isMyMessage = messageData.sender === user?.uid;
     const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
-    console.log(messageData);
 
     return (
       <div
@@ -104,6 +103,13 @@ const ChatComponent = () => {
     );
   };
 
+  useEffect(() => {
+    const messagesContainer = document.getElementById("messages-container");
+
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  }, [messageContext.messages, user]);
   return (
     <Container fluid className={styles.main}>
       {user ? (
@@ -120,16 +126,8 @@ const ChatComponent = () => {
             </Col>
           )}
           <Col>
-            <Col className={styles.messagesContainer}>
-              {messageContext.messages.map((messageData) =>
-                renderMessage({
-                  ...messageData,
-                  senderUsername:
-                    userData?.uid === messageData.sender
-                      ? "You"
-                      : userData?.username,
-                })
-              )}
+            <Col id="messages-container" className={styles.messagesContainer}>
+              {messageContext.messages.map(renderMessage)}
             </Col>
             <Button
               variant="primary"
