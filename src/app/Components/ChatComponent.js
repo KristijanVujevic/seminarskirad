@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { MessageContext } from "./MessageContext";
+import React, { useEffect, useState } from "react";
+
 import { useScaledrone } from "./ScaledroneContext";
 import Link from "next/link";
 import { auth, firestore } from "@/app/Components/firebase";
@@ -25,11 +25,12 @@ const fetchUserData = async (user, setUserData) => {
 export { fetchUserData };
 const ChatComponent = () => {
   const router = useRouter();
-  const messageContext = useContext(MessageContext);
+
   const { drone } = useScaledrone();
 
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const authListener = auth.onAuthStateChanged((authUser) => {
@@ -63,8 +64,8 @@ const ChatComponent = () => {
       });
 
       room.on("message", (messageData) => {
-        console.log("Received message:", messageData);
-        messageContext.addMessage(messageData);
+        // Update state with the new message
+        setMessages((prevMessages) => [...prevMessages, messageData]);
       });
 
       drone.on("error", (error) => console.error(error));
@@ -79,37 +80,30 @@ const ChatComponent = () => {
     }
   }, [user, drone]);
 
-  const renderMessage = (messageData) => {
-    if (!messageData || !messageData.message) {
-      console.log("Skipping message due to missing data or message content");
+  const renderMessage = (messages) => {
+    if (!messages) {
       return null;
     }
 
-    const isMyMessage = messageData.sender === user?.uid;
-    const senderUsername = isMyMessage ? "You" : messageData.senderUsername;
+    const isMyMessage = messages.data.uid === user?.uid;
+
+    const senderUsername = isMyMessage ? "You" : messages.data.sender;
 
     return (
       <div
-        key={messageData.id}
+        key={messages.id}
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        <p>{messageData.message}</p>
+        <p>{messages.data.message}</p>
         <p>Sent by: {senderUsername}</p>
       </div>
     );
   };
 
-  useEffect(() => {
-    const messagesContainer = document.getElementById("messages-container");
-
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-  }, [messageContext.messages, user]);
   return (
     <Container fluid className={styles.main}>
       {user ? (
@@ -126,8 +120,17 @@ const ChatComponent = () => {
             </Col>
           )}
           <Col>
-            <Col id="messages-container" className={styles.messagesContainer}>
-              {messageContext.messages.map(renderMessage)}
+            <Col className={styles.messagesContainer}>
+              {/* Render messages here */}
+              {messages.map((messageData) =>
+                renderMessage({
+                  ...messageData,
+                  senderUsername:
+                    userData?.uid === messageData.sender
+                      ? "You"
+                      : userData?.username,
+                })
+              )}
             </Col>
             <Button
               variant="primary"

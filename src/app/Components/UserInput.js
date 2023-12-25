@@ -1,12 +1,11 @@
 // UserInput.js
-import React, { useContext, useState } from "react";
-import { MessageContext } from "./MessageContext";
+import React, { useState } from "react";
+
 import { auth } from "@/app/Components/firebase";
 import { useScaledrone } from "./ScaledroneContext";
 import { fetchUserData } from "./ChatComponent";
 
 const UserInput = ({ user, setUserData, userData }) => {
-  const messageContext = useContext(MessageContext);
   const { drone } = useScaledrone();
   const [message, setMessage] = useState("");
 
@@ -22,19 +21,14 @@ const UserInput = ({ user, setUserData, userData }) => {
       drone.publish({
         room: "observable-my-room",
         message: {
-          id: messageId,
-          sender: userData, // Assuming you want to send user data as the sender
+          msgId: messageId,
+          sender: userData.username, // Assuming you want to send user data as the sender
           message: message,
+          uid: currentUser.uid,
         },
       });
 
       setMessage("");
-
-      messageContext.addMessage({
-        id: messageId,
-        message: message,
-        sender: currentUser.uid,
-      });
 
       // Fetch user data after sending a message
       await fetchUserData(user, setUserData);
