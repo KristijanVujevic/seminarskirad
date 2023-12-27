@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "eslint-config-next": "^14.0.4",
+    "firebase": "^10.7.1",
     "next": "^14.0.4",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.9.2",
     "react-dom": "^18.2.0"
   }
 }
