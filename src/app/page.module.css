@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 10rem;
+  padding-inline: 10rem;
   min-height: 100vh;
 }
 
@@ -230,16 +230,43 @@
     transform: rotate(0deg);
   }
 }
+.messagesContainer {
+  max-width: 80%; /* Adjust as needed */
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column; /* Stack the chat bubbles vertically */
+}
+
 .myMessage {
-  background-color: #00ff00; /* Replace with your desired background color for your messages */
+  background-color: #3a61ab77; /* Replace with your desired background color for your messages */
   text-align: right;
-  padding: 8px;
-  margin-bottom: 4px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  max-width: 70%; /* Adjust as needed */
+  max-height: 100px; /* Set a fixed height for the chat bubble */
+
+  align-self: flex-end;
+  overflow-wrap: break-word; /* Handle overflow within words */
 }
 
 .otherUserMessage {
-  background-color: #92459e; /* Replace with your desired background color for other users' messages */
+  background-color: #ab5ab79e; /* Replace with your desired background color for other users' messages */
   text-align: left;
-  padding: 8px;
-  margin-bottom: 4px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  max-width: 70%; /* Adjust as needed */
+  align-self: flex-start;
+  max-height: 100px; /* Set a fixed height for the chat bubble */
+
+  overflow-wrap: break-word; /* Handle overflow within words */
+}
+.line-limit {
+  display: inline-block;
+  max-width: 15ch; /* Adjust as needed, 15 characters per line in this example */
+
+  white-space: nowrap;
 }

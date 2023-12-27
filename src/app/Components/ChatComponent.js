@@ -8,6 +8,32 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
+function timeConverter(UNIX_timestamp) {
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time =
+    date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
+  return time;
+}
 
 const fetchUserData = async (user, setUserData) => {
   try {
@@ -84,9 +110,9 @@ const ChatComponent = () => {
     if (!messages) {
       return null;
     }
-
+    console.log(messages);
     const isMyMessage = messages.data.uid === user?.uid;
-
+    const timestamp = timeConverter(messages.timestamp);
     const senderUsername = isMyMessage ? "You" : messages.data.sender;
 
     return (
@@ -98,8 +124,9 @@ const ChatComponent = () => {
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        <p>{messages.data.message}</p>
+        <p className="line-limit">{messages.data.message}</p>
         <p>Sent by: {senderUsername}</p>
+        <small>{timestamp}</small>
       </div>
     );
   };
@@ -110,9 +137,10 @@ const ChatComponent = () => {
         <Row className={styles.content}>
           {userData ? (
             <Col>
-              <p className={styles.description}>
-                Welcome, {userData.username}!
-              </p>
+              <h1>Logged in as: {userData.username}</h1>
+              <Button variant="danger" onClick={handleLogout}>
+                Logout
+              </Button>
             </Col>
           ) : (
             <Col>
@@ -121,7 +149,6 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
-              {/* Render messages here */}
               {messages.map((messageData) =>
                 renderMessage({
                   ...messageData,
@@ -132,13 +159,6 @@ const ChatComponent = () => {
                 })
               )}
             </Col>
-            <Button
-              variant="primary"
-              className={styles.card}
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
           </Col>
           <Col>
             <UserInput

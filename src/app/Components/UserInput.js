@@ -1,6 +1,6 @@
 // UserInput.js
 import React, { useState } from "react";
-
+import { Button, Form } from "react-bootstrap";
 import { auth } from "@/app/Components/firebase";
 import { useScaledrone } from "./ScaledroneContext";
 import { fetchUserData } from "./ChatComponent";
@@ -39,15 +39,17 @@ const UserInput = ({ user, setUserData, userData }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <textarea
           rows={3}
           placeholder="Enter message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button type="submit">Send</button>
-      </form>
+        <Button variant="outline-success" type="submit">
+          Send
+        </Button>
+      </Form>
     </div>
   );
 };
