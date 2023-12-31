@@ -8,7 +8,7 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
-import { render } from "react-dom";
+
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
   var months = [
