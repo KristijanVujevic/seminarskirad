@@ -16,6 +16,7 @@ export default function RootLayout({ children }) {
           src="https://cdn.scaledrone.com/scaledrone.min.js"
           type="text/javascript"
         ></script>
+        <script src="http://localhost:8097"></script>
       </head>
       <body className={inter.className}>{children}</body>
     </html>

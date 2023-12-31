@@ -5,6 +5,7 @@
   align-items: center;
   padding-inline: 10rem;
   min-height: 100vh;
+  max-width: 100vw;
 }
 
 .description {
@@ -245,7 +246,7 @@
   margin-bottom: 10px;
   word-wrap: break-word;
   max-width: 70%; /* Adjust as needed */
-  max-height: 100px; /* Set a fixed height for the chat bubble */
+  /* Set a fixed height for the chat bubble */
 
   align-self: flex-end;
   overflow-wrap: break-word; /* Handle overflow within words */
@@ -260,13 +261,12 @@
   word-wrap: break-word;
   max-width: 70%; /* Adjust as needed */
   align-self: flex-start;
-  max-height: 100px; /* Set a fixed height for the chat bubble */
 
   overflow-wrap: break-word; /* Handle overflow within words */
 }
 .line-limit {
   display: inline-block;
   max-width: 15ch; /* Adjust as needed, 15 characters per line in this example */
-
-  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
 }

@@ -39,6 +39,10 @@ const SignIn = () => {
     <div className={styles.main}>
       <h2 className={styles.title}>Sign In</h2>
 
+      <h3>
+        <a href="/signup">Create a new account!</a>
+      </h3>
+
       <input
         className={styles.card}
         type="email"

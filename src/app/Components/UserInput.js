@@ -23,6 +23,7 @@ const UserInput = ({ user, setUserData, userData }) => {
         message: {
           msgId: messageId,
           sender: userData.username, // Assuming you want to send user data as the sender
+          timestamp: new Date().getTime() / 1000,
           message: message,
           uid: currentUser.uid,
         },

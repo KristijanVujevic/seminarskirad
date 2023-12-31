@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { auth, firestore } from "@/app/Components/firebase";
 import { useRouter } from "next/navigation";
 import { Modal, Button } from "react-bootstrap";
+
 import styles from "@/app/page.module.css";
 
 const SignUp = () => {
@@ -45,6 +46,10 @@ const SignUp = () => {
   return (
     <div className={styles.main}>
       <h2 className={styles.title}>Sign Up</h2>
+
+      <h3>
+        <a href="/signin">Already have an account?</a>
+      </h3>
 
       <input
         className={styles.card}

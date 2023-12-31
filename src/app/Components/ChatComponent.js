@@ -8,6 +8,7 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
+import { render } from "react-dom";
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
   var months = [
@@ -57,6 +58,7 @@ const ChatComponent = () => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [oldMessages, setOldMessages] = useState([]);
 
   useEffect(() => {
     const authListener = auth.onAuthStateChanged((authUser) => {
@@ -79,7 +81,7 @@ const ChatComponent = () => {
 
   useEffect(() => {
     if (user && drone) {
-      const room = drone.subscribe("observable-my-room");
+      const room = drone.subscribe("observable-my-room", { historyCount: 99 });
 
       room.on("open", (error) => {
         if (error) {
@@ -96,6 +98,9 @@ const ChatComponent = () => {
 
       drone.on("error", (error) => console.error(error));
 
+      room.on("history_message", ({ data }) => {
+        setOldMessages((prevOldMessages) => [...prevOldMessages, data]);
+      });
       fetchUserData(user, setUserData);
 
       return () => {
@@ -106,6 +111,30 @@ const ChatComponent = () => {
     }
   }, [user, drone]);
 
+  const renderHistoryMessage = (oldMessages) => {
+    if (!oldMessages) {
+      return null;
+    }
+    const isMyMessage = oldMessages.uid === user?.uid;
+    const timestamp = timeConverter(oldMessages.timestamp);
+    const senderUsername = isMyMessage ? "You" : oldMessages.sender;
+    console.log(oldMessages);
+    console.log(senderUsername);
+    return (
+      <div
+        key={oldMessages.msgId}
+        className={
+          isMyMessage
+            ? `${styles.message} ${styles.myMessage}`
+            : `${styles.message} ${styles.otherUserMessage}`
+        }
+      >
+        <p className="line-limit">{oldMessages.message}</p>
+        <p>Sent by: {senderUsername}</p>
+        <small>{timestamp}</small>
+      </div>
+    );
+  };
   const renderMessage = (messages) => {
     if (!messages) {
       return null;
@@ -134,9 +163,9 @@ const ChatComponent = () => {
   return (
     <Container fluid className={styles.main}>
       {user ? (
-        <Row className={styles.content}>
+        <Row className={styles.content} style={{ maxWidth: "100vw" }}>
           {userData ? (
-            <Col>
+            <Col style={{ display: "flex", justifyContent: "center" }}>
               <h1>Logged in as: {userData.username}</h1>
               <Button variant="danger" onClick={handleLogout}>
                 Logout
@@ -149,6 +178,12 @@ const ChatComponent = () => {
           )}
           <Col>
             <Col className={styles.messagesContainer}>
+              {oldMessages.map((msgData) =>
+                renderHistoryMessage({
+                  ...msgData,
+                  senderUsername: userData?.uid === msgData.sender,
+                })
+              )}
               {messages.map((messageData) =>
                 renderMessage({
                   ...messageData,
@@ -169,7 +204,15 @@ const ChatComponent = () => {
           </Col>
         </Row>
       ) : (
-        <Row className={styles.grid}>
+        <Row
+          className={styles.grid}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Col>
             <Link href={"/signin"}>Sign in!</Link>
           </Col>
