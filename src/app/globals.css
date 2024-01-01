@@ -118,7 +118,7 @@ form {
   border-radius: 10px;
 }
 
-textarea {
+.input-message {
   font-size: 16px;
   border: 0;
   outline: none;

@@ -41,11 +41,14 @@ const UserInput = ({ user, setUserData, userData }) => {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <textarea
+        <input
+          className="input-message"
+          type="text"
           rows={3}
           placeholder="Enter message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          autoFocus
         />
         <Button variant="outline-success" type="submit">
           Send

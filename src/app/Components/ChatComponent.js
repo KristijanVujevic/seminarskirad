@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect, useRef, useState } from "react";
+import Members from "./Members";
 import { useScaledrone } from "./ScaledroneContext";
 import Link from "next/link";
 import { auth, firestore } from "@/app/Components/firebase";
@@ -36,6 +36,10 @@ function timeConverter(UNIX_timestamp) {
   return time;
 }
 
+function randomColor() {
+  return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
+}
+
 const fetchUserData = async (user, setUserData) => {
   try {
     const doc = await firestore.collection("users").doc(user.uid).get();
@@ -59,6 +63,13 @@ const ChatComponent = () => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [oldMessages, setOldMessages] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [me, setMe] = useState({
+    username: userData?.username,
+    color: randomColor(),
+  });
+  const membersRef = useRef();
+  membersRef.current = members;
 
   useEffect(() => {
     const authListener = auth.onAuthStateChanged((authUser) => {
@@ -81,7 +92,7 @@ const ChatComponent = () => {
 
   useEffect(() => {
     if (user && drone) {
-      const room = drone.subscribe("observable-my-room", { historyCount: 99 });
+      const room = drone.subscribe("observable-my-room", { historyCount: 100 });
 
       room.on("open", (error) => {
         if (error) {
@@ -89,6 +100,18 @@ const ChatComponent = () => {
         } else {
           console.log(`Connected to room`);
         }
+      });
+      room.on("members", (members) => {
+        setMembers(members);
+      });
+      room.on("member_join", (member) => {
+        setMembers([...membersRef.current, member]);
+      });
+      room.on("member_leave", ({ id }) => {
+        const index = membersRef.current.findIndex((m) => m.id === id);
+        const newMembers = [...membersRef.current];
+        newMembers.splice(index, 1);
+        setMembers(newMembers);
       });
 
       room.on("message", (messageData) => {
@@ -118,8 +141,7 @@ const ChatComponent = () => {
     const isMyMessage = oldMessages.uid === user?.uid;
     const timestamp = timeConverter(oldMessages.timestamp);
     const senderUsername = isMyMessage ? "You" : oldMessages.sender;
-    console.log(oldMessages);
-    console.log(senderUsername);
+
     return (
       <div
         key={oldMessages.msgId}
@@ -139,7 +161,7 @@ const ChatComponent = () => {
     if (!messages) {
       return null;
     }
-    console.log(messages);
+
     const isMyMessage = messages.data.uid === user?.uid;
     const timestamp = timeConverter(messages.timestamp);
     const senderUsername = isMyMessage ? "You" : messages.data.sender;
@@ -170,6 +192,7 @@ const ChatComponent = () => {
               <Button variant="danger" onClick={handleLogout}>
                 Logout
               </Button>
+              {members && <Members members={members} me={me} />}
             </Col>
           ) : (
             <Col>

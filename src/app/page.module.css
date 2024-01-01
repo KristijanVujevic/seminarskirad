@@ -270,3 +270,43 @@
   text-overflow: ellipsis;
   word-break: break-all;
 }
+
+.members {
+  border-bottom: solid #6363bf1c;
+  background: inherit;
+  padding: 8px;
+}
+
+.membersCount {
+  margin-bottom: 8px;
+}
+
+.membersList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.membersList > .member {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.member > .avatar {
+  margin-right: 5px;
+  height: 24px;
+  width: 24px;
+}
+
+.currentMember > .messageContent .text {
+  background-color: inherit;
+  border-top-right-radius: 0;
+  color: inherit;
+}
+
+.typingIndicator {
+  color: gray;
+  font-size: 14px;
+}
