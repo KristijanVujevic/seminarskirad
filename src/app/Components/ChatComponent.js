@@ -92,7 +92,7 @@ const ChatComponent = () => {
 
   useEffect(() => {
     if (user && drone) {
-      const room = drone.subscribe("observable-my-room", { historyCount: 100 });
+      const room = drone.subscribe("observable-my-room", { historyCount: 20 });
 
       room.on("open", (error) => {
         if (error) {

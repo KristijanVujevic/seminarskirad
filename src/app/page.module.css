@@ -236,6 +236,7 @@
   margin: 20px auto;
   display: flex;
   flex-direction: column; /* Stack the chat bubbles vertically */
+  padding-bottom: 10%;
 }
 
 .myMessage {

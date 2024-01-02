@@ -59,7 +59,7 @@ const SignIn = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button
-        className={`${styles.card} ${loading ? styles.disabled : ""}`}
+        className={`${styles.button} ${loading ? styles.disabled : ""}`}
         onClick={handleSignIn}
         disabled={loading}
       >

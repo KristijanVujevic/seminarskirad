@@ -74,7 +74,7 @@ const SignUp = () => {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <button className={styles.card} onClick={handleSignUp}>
+      <button className={styles.button} onClick={handleSignUp}>
         Sign Up
       </button>
       <Modal show={isModalOpen} onHide={closeModal}>

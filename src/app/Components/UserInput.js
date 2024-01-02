@@ -22,7 +22,7 @@ const UserInput = ({ user, setUserData, userData }) => {
         room: "observable-my-room",
         message: {
           msgId: messageId,
-          sender: userData.username, // Assuming you want to send user data as the sender
+          sender: userData.username,
           timestamp: new Date().getTime() / 1000,
           message: message,
           uid: currentUser.uid,
@@ -39,8 +39,8 @@ const UserInput = ({ user, setUserData, userData }) => {
   };
 
   return (
-    <div>
-      <Form onSubmit={handleSubmit}>
+    <div className="user-input-container">
+      <Form className="userinput" onSubmit={handleSubmit}>
         <input
           className="input-message"
           type="text"
