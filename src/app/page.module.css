@@ -237,12 +237,8 @@
 }
 
 .myMessage {
-  background: rgb(45, 194, 172);
-  background: linear-gradient(
-    180deg,
-    rgba(45, 194, 172, 0.8267682072829132) 0%,
-    rgba(0, 56, 185, 0.6643032212885154) 63%
-  );
+  background: rgba(16, 16, 56, 0.503);
+
   text-align: right;
   border-radius: 10px;
   padding: 10px;

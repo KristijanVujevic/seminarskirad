@@ -1,6 +1,6 @@
 :root {
-  background-image: url(../../public/bg2.jpg);
-  background-size: cover;
+  background-image: url(../../public/bg4.jpg);
+  background-size: contain;
 
   background-attachment: fixed;
   --max-width: 1100px;
@@ -91,6 +91,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  color: white;
 }
 
 body {
