@@ -229,8 +229,9 @@
   }
 }
 .messagesContainer {
-  max-width: 80%; /* Adjust as needed */
+  max-width: 95%; /* Adjust as needed */
   margin: 20px;
+
   display: flex;
   flex-direction: column; /* Stack the chat bubbles vertically */
   padding-bottom: 10%;

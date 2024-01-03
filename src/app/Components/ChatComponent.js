@@ -200,7 +200,10 @@ const ChatComponent = () => {
             </Col>
           )}
           <Col>
-            <Col className={styles.messagesContainer}>
+            <Col
+              className={styles.messagesContainer}
+              style={{ width: "100vw" }}
+            >
               {oldMessages.map((msgData) =>
                 renderHistoryMessage({
                   ...msgData,

@@ -44,6 +44,7 @@ const SignIn = () => {
       </h3>
 
       <input
+        style={{ color: "white" }}
         className={styles.card}
         type="email"
         placeholder="email"
@@ -52,6 +53,7 @@ const SignIn = () => {
       />
 
       <input
+        style={{ color: "white" }}
         className={styles.card}
         type="password"
         placeholder="password"

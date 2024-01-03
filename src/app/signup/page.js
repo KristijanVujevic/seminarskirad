@@ -52,6 +52,7 @@ const SignUp = () => {
       </h3>
 
       <input
+        style={{ color: "white" }}
         className={styles.card}
         type="email"
         value={email}
@@ -60,6 +61,7 @@ const SignUp = () => {
       />
 
       <input
+        style={{ color: "white" }}
         className={styles.card}
         type="password"
         placeholder="password"
@@ -68,6 +70,7 @@ const SignUp = () => {
       />
 
       <input
+        style={{ color: "white" }}
         className={styles.card}
         type="text"
         placeholder="username"
