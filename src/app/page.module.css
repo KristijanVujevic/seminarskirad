@@ -237,7 +237,12 @@
 }
 
 .myMessage {
-  background-color: #3a62abda; /* Replace with your desired background color for your messages */
+  background: rgb(45, 194, 172);
+  background: linear-gradient(
+    180deg,
+    rgba(45, 194, 172, 0.8267682072829132) 0%,
+    rgba(0, 56, 185, 0.6643032212885154) 63%
+  );
   text-align: right;
   border-radius: 10px;
   padding: 10px;
@@ -251,7 +256,12 @@
 }
 
 .otherUserMessage {
-  background-color: #ab5ab7cf; /* Replace with your desired background color for other users' messages */
+  background: rgb(62, 62, 62);
+  background: linear-gradient(
+    146deg,
+    rgba(62, 62, 62, 0.8267682072829132) 0%,
+    rgba(88, 157, 238, 0.6643032212885154) 100%
+  );
   text-align: left;
   border-radius: 10px;
   padding: 10px;
