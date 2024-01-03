@@ -4,7 +4,13 @@ import styles from "@/app/page.module.css";
 export default function Members({ members, me }) {
   return (
     <div className={styles.members}>
-      <div className={styles.membersCount}>
+      <div
+        style={{
+          fontSize: "3vh",
+          fontVariant: "all-small-caps",
+        }}
+        className={styles.membersCount}
+      >
         {members.length} user{members.length === 1 ? "" : "s"} online
       </div>
       <div className={styles.membersList}>

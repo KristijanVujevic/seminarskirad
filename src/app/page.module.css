@@ -3,9 +3,10 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding-inline: 10rem;
+
   min-height: 100vh;
   max-width: 100vw;
+  background-color: transparent;
 }
 
 .description {
@@ -131,10 +132,6 @@
 
 /* Mobile */
 @media (max-width: 700px) {
-  .content {
-    padding: 4rem;
-  }
-
   .grid {
     grid-template-columns: 1fr;
     margin-bottom: 120px;
@@ -233,14 +230,14 @@
 }
 .messagesContainer {
   max-width: 80%; /* Adjust as needed */
-  margin: 20px auto;
+  margin: 20px;
   display: flex;
   flex-direction: column; /* Stack the chat bubbles vertically */
   padding-bottom: 10%;
 }
 
 .myMessage {
-  background-color: #3a61ab77; /* Replace with your desired background color for your messages */
+  background-color: #3a62abda; /* Replace with your desired background color for your messages */
   text-align: right;
   border-radius: 10px;
   padding: 10px;
@@ -254,7 +251,7 @@
 }
 
 .otherUserMessage {
-  background-color: #ab5ab79e; /* Replace with your desired background color for other users' messages */
+  background-color: #ab5ab7cf; /* Replace with your desired background color for other users' messages */
   text-align: left;
   border-radius: 10px;
   padding: 10px;

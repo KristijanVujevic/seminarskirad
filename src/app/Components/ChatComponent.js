@@ -237,13 +237,17 @@ const ChatComponent = () => {
           }}
         >
           <Col>
-            <Link href={"/signin"}>Sign in!</Link>
+            <Link style={{ fontSize: "10vh " }} href={"/signin"}>
+              Sign in!
+            </Link>
           </Col>
           <Col>
             <br />
           </Col>
           <Col>
-            <Link href={"/signup"}>Create an account!</Link>
+            <Link style={{ fontSize: "10vh " }} href={"/signup"}>
+              Create an account!
+            </Link>
           </Col>
         </Row>
       )}
