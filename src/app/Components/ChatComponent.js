@@ -8,6 +8,7 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
+import ImageModal from "./ImageModal";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -64,6 +65,10 @@ const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [oldMessages, setOldMessages] = useState([]);
   const [members, setMembers] = useState([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+  const [visibleMessages, setVisibleMessages] = useState(20); // Adjust the initial number as needed
+  const messagesContainerRef = useRef(null);
+
   const [me, setMe] = useState({
     username: userData?.username,
     color: randomColor(),
@@ -81,6 +86,12 @@ const ChatComponent = () => {
     };
   }, []);
 
+  const openImageModal = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+  };
+  const closeImageModal = () => {
+    setSelectedImageUrl(null);
+  };
   const handleLogout = async () => {
     try {
       await auth.signOut();
@@ -133,14 +144,59 @@ const ChatComponent = () => {
       };
     }
   }, [user, drone]);
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
   const renderHistoryMessage = (oldMessages) => {
     if (!oldMessages) {
       return null;
     }
+
     const isMyMessage = oldMessages.uid === user?.uid;
     const timestamp = timeConverter(oldMessages.timestamp);
     const senderUsername = isMyMessage ? "You" : oldMessages.sender;
+
+    let messageContent;
+    if (oldMessages.audioURL) {
+      // Handle voice message rendering
+      messageContent = (
+        <div>
+          <audio controls>
+            <source src={oldMessages.audioURL} type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      );
+    } else if (oldMessages.imageURL) {
+      // Handle image message rendering
+      messageContent = (
+        <div>
+          <img
+            src={oldMessages.imageURL}
+            alt="Image"
+            style={{
+              maxWidth: "50%",
+              height: "auto",
+              cursor: "pointer",
+              "@media (max-width: 768px)": {
+                // Adjust the values based on your preference
+                maxWidth: "40%",
+              },
+            }}
+            onClick={() => openImageModal(oldMessages.imageURL)}
+          />
+        </div>
+      );
+    } else {
+      // Handle text message rendering
+      messageContent = <p className="line-limit">{oldMessages.message}</p>;
+    }
 
     return (
       <div
@@ -151,31 +207,60 @@ const ChatComponent = () => {
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        <p className="line-limit">{oldMessages.message}</p>
+        {messageContent}
         <p>Sent by: {senderUsername}</p>
         <small>{timestamp}</small>
       </div>
     );
   };
-  const renderMessage = (messages) => {
-    if (!messages) {
+
+  const renderSingleMessage = (message) => {
+    if (!message) {
       return null;
     }
 
-    const isMyMessage = messages.data.uid === user?.uid;
-    const timestamp = timeConverter(messages.timestamp);
-    const senderUsername = isMyMessage ? "You" : messages.data.sender;
+    const isMyMessage = message.data.uid === user?.uid;
+    const timestamp = timeConverter(message.timestamp);
+    const senderUsername = isMyMessage ? "You" : message.data.sender;
+
+    let messageContent;
+    if (message.data.audioURL) {
+      // Handle voice message rendering
+      messageContent = (
+        <div>
+          <audio controls>
+            <source src={message.data.audioURL} type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      );
+    } else if (message.data.imageURL) {
+      // Handle image message rendering
+      messageContent = (
+        <div>
+          <img
+            src={message.data.imageURL}
+            alt="Image"
+            style={{ maxWidth: "100%", cursor: "pointer" }}
+            onClick={() => openImageModal(message.data.imageURL)}
+          />
+        </div>
+      );
+    } else {
+      // Handle text message rendering
+      messageContent = <p className="line-limit">{message.data.message}</p>;
+    }
 
     return (
       <div
-        key={messages.id}
+        key={message.id}
         className={
           isMyMessage
             ? `${styles.message} ${styles.myMessage}`
             : `${styles.message} ${styles.otherUserMessage}`
         }
       >
-        <p className="line-limit">{messages.data.message}</p>
+        {messageContent}
         <p>Sent by: {senderUsername}</p>
         <small>{timestamp}</small>
       </div>
@@ -211,7 +296,7 @@ const ChatComponent = () => {
                 })
               )}
               {messages.map((messageData) =>
-                renderMessage({
+                renderSingleMessage({
                   ...messageData,
                   senderUsername:
                     userData?.uid === messageData.sender
@@ -219,6 +304,10 @@ const ChatComponent = () => {
                       : userData?.username,
                 })
               )}
+              <div
+                style={{ float: "left", clear: "both" }}
+                ref={messagesContainerRef}
+              />
             </Col>
           </Col>
           <Col>
@@ -227,6 +316,7 @@ const ChatComponent = () => {
               userData={userData}
               setUserData={setUserData}
             />
+            <ImageModal imageUrl={selectedImageUrl} onClose={closeImageModal} />
           </Col>
         </Row>
       ) : (

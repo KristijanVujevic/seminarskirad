@@ -152,3 +152,13 @@ button[type="submit"] {
 h1 {
   font-variant: small-caps;
 }
+@media (min-width: 701px) and (max-width: 1120px) {
+  .input-message {
+    width: 75%;
+  }
+}
+@media (max-width: 700px) {
+  .input-message {
+    width: 75%;
+  }
+}
