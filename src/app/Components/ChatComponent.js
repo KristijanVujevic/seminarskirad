@@ -9,7 +9,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
 import ImageModal from "./ImageModal";
-import AudioPlayer from "react-h5-audio-player";
+import { useToasts } from "react-toast-notifications";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -87,6 +87,7 @@ const ChatComponent = () => {
     };
   }, []);
 
+
   const openImageModal = (imageUrl) => {
     setSelectedImageUrl(imageUrl);
   };
@@ -144,7 +145,7 @@ const ChatComponent = () => {
         }
       };
     }
-  }, [user, drone]);
+  }, [user, drone, addToast]);
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
