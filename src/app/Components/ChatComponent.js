@@ -69,7 +69,6 @@ const ChatComponent = () => {
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [visibleMessages, setVisibleMessages] = useState(20); // Adjust the initial number as needed
   const messagesContainerRef = useRef(null);
-  const [notificationPermission, setNotificationPermission] = useState(false);
 
   const [me, setMe] = useState({
     username: userData?.username,
@@ -87,24 +86,7 @@ const ChatComponent = () => {
       authListener();
     };
   }, []);
-  useEffect(() => {
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          setNotificationPermission(true);
-        }
-      });
-    } else {
-      setNotificationPermission(true);
-    }
-  }, []);
-  const showNotification = (message) => {
-    if (notificationPermission) {
-      new Notification("New Message", {
-        body: message,
-      });
-    }
-  };
+
   const openImageModal = (imageUrl) => {
     setSelectedImageUrl(imageUrl);
   };
@@ -147,7 +129,6 @@ const ChatComponent = () => {
       room.on("message", (messageData) => {
         // Update state with the new message
         setMessages((prevMessages) => [...prevMessages, messageData]);
-        showNotification(messageData.text);
       });
 
       drone.on("error", (error) => console.error(error));
