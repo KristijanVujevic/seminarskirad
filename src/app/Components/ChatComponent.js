@@ -89,11 +89,19 @@ const ChatComponent = () => {
       setNotificationPermission(true);
     }
   }, []);
-  const showNotification = (message) => {
+
+  const showNotification = (messageData) => {
     if (notificationPermission) {
-      new Notification("New Message", {
-        body: message,
-      });
+      if (Notification) {
+        console.log("Notification API is available");
+        new Notification("New Message", {
+          body:
+            `${messageData.data.sender} sent you: ${messageData.data.message}` ||
+            "Default notification text",
+        });
+      } else {
+        console.log("Notification API is not available");
+      }
     }
   };
   const openImageModal = (imageUrl) => {
@@ -135,7 +143,7 @@ const ChatComponent = () => {
       room.on("message", (messageData) => {
         // Update state with the new message
         setMessages((prevMessages) => [...prevMessages, messageData]);
-        showNotification(messageData.text);
+        showNotification(messageData);
       });
       drone.on("error", (error) => console.error(error));
       room.on("history_message", ({ data }) => {
@@ -148,7 +156,7 @@ const ChatComponent = () => {
         }
       };
     }
-  }, [user, drone, notificationPermission]);
+  }, [user, drone]);
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
