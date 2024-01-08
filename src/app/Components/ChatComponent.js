@@ -163,7 +163,7 @@ const ChatComponent = () => {
         }
       };
     }
-  }, [user, drone]);
+  }, [user, drone, notificationPermission]);
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
