@@ -9,8 +9,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
 import ImageModal from "./ImageModal";
-import { useToasts } from "react-toast-notifications";
-
+import AudioPlayer from "react-h5-audio-player";
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
   var months = [
@@ -37,11 +36,9 @@ function timeConverter(UNIX_timestamp) {
     date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
   return time;
 }
-
 function randomColor() {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 }
-
 const fetchUserData = async (user, setUserData) => {
   try {
     const doc = await firestore.collection("users").doc(user.uid).get();
@@ -54,13 +51,10 @@ const fetchUserData = async (user, setUserData) => {
     console.error("Error fetching user data:", error.message);
   }
 };
-
 export { fetchUserData };
 const ChatComponent = () => {
   const router = useRouter();
-
   const { drone } = useScaledrone();
-
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -69,25 +63,39 @@ const ChatComponent = () => {
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [visibleMessages, setVisibleMessages] = useState(20); // Adjust the initial number as needed
   const messagesContainerRef = useRef(null);
-
+  const [notificationPermission, setNotificationPermission] = useState(false);
   const [me, setMe] = useState({
     username: userData?.username,
     color: randomColor(),
   });
   const membersRef = useRef();
   membersRef.current = members;
-
   useEffect(() => {
     const authListener = auth.onAuthStateChanged((authUser) => {
       setUser(authUser);
     });
-
     return () => {
       authListener();
     };
   }, []);
-
-
+  useEffect(() => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          setNotificationPermission(true);
+        }
+      });
+    } else {
+      setNotificationPermission(true);
+    }
+  }, []);
+  const showNotification = (message) => {
+    if (notificationPermission) {
+      new Notification("New Message", {
+        body: message,
+      });
+    }
+  };
   const openImageModal = (imageUrl) => {
     setSelectedImageUrl(imageUrl);
   };
@@ -102,11 +110,9 @@ const ChatComponent = () => {
       console.error("Error signing out:", error.message);
     }
   };
-
   useEffect(() => {
     if (user && drone) {
       const room = drone.subscribe("observable-my-room", { historyCount: 20 });
-
       room.on("open", (error) => {
         if (error) {
           console.error(error);
@@ -126,26 +132,23 @@ const ChatComponent = () => {
         newMembers.splice(index, 1);
         setMembers(newMembers);
       });
-
       room.on("message", (messageData) => {
         // Update state with the new message
         setMessages((prevMessages) => [...prevMessages, messageData]);
+        showNotification(messageData.text);
       });
-
       drone.on("error", (error) => console.error(error));
-
       room.on("history_message", ({ data }) => {
         setOldMessages((prevOldMessages) => [...prevOldMessages, data]);
       });
       fetchUserData(user, setUserData);
-
       return () => {
         if (drone.client) {
           drone.client.close();
         }
       };
     }
-  }, [user, drone, addToast]);
+  }, [user, drone, notificationPermission]);
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollIntoView({ behavior: "smooth" });
@@ -159,11 +162,9 @@ const ChatComponent = () => {
     if (!oldMessages) {
       return null;
     }
-
     const isMyMessage = oldMessages.uid === user?.uid;
     const timestamp = timeConverter(oldMessages.timestamp);
     const senderUsername = isMyMessage ? "You" : oldMessages.sender;
-
     let messageContent;
     if (oldMessages.audioURL) {
       // Handle voice message rendering
@@ -199,7 +200,6 @@ const ChatComponent = () => {
       // Handle text message rendering
       messageContent = <p className="line-limit">{oldMessages.message}</p>;
     }
-
     return (
       <div
         key={oldMessages.msgId}
@@ -215,16 +215,13 @@ const ChatComponent = () => {
       </div>
     );
   };
-
   const renderSingleMessage = (message) => {
     if (!message) {
       return null;
     }
-
     const isMyMessage = message.data.uid === user?.uid;
     const timestamp = timeConverter(message.timestamp);
     const senderUsername = isMyMessage ? "You" : message.data.sender;
-
     let messageContent;
     if (message.data.audioURL) {
       // Handle voice message rendering
@@ -252,7 +249,6 @@ const ChatComponent = () => {
       // Handle text message rendering
       messageContent = <p className="line-limit">{message.data.message}</p>;
     }
-
     return (
       <div
         key={message.id}
@@ -268,7 +264,6 @@ const ChatComponent = () => {
       </div>
     );
   };
-
   return (
     <Container fluid className={styles.main}>
       {user ? (
@@ -349,5 +344,4 @@ const ChatComponent = () => {
     </Container>
   );
 };
-
 export default ChatComponent;
