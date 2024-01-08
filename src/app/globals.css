@@ -156,9 +156,15 @@ h1 {
   .input-message {
     width: 75%;
   }
+  audio {
+    max-width: 90%;
+  }
 }
 @media (max-width: 700px) {
   .input-message {
     width: 75%;
+  }
+  audio {
+    max-width: 90%;
   }
 }

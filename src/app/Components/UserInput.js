@@ -1,7 +1,12 @@
 // Import necessary libraries and icons
 import React, { useState, useRef } from "react";
 import { Button, Form } from "react-bootstrap";
-import { BsFillMicFill, BsFillImageFill, BsMicMuteFill } from "react-icons/bs";
+import {
+  BsFillMicFill,
+  BsFillImageFill,
+  BsMicMuteFill,
+  BsSendFill,
+} from "react-icons/bs";
 import { auth, firestore, storage } from "@/app/Components/firebase"; // Adjust the path accordingly
 import { useScaledrone } from "./ScaledroneContext";
 import { fetchUserData } from "./ChatComponent";
@@ -214,7 +219,7 @@ const UserInput = ({ user, setUserData, userData }) => {
           required
         />
         <Button variant="outline-success" type="submit">
-          Send
+          <BsSendFill />
         </Button>
         {/* Button for starting recording */}
         <Button

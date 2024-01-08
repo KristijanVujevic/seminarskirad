@@ -9,6 +9,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
 import ImageModal from "./ImageModal";
+import AudioPlayer from "react-h5-audio-player";
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -68,6 +69,7 @@ const ChatComponent = () => {
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [visibleMessages, setVisibleMessages] = useState(20); // Adjust the initial number as needed
   const messagesContainerRef = useRef(null);
+  const [notificationPermission, setNotificationPermission] = useState(false);
 
   const [me, setMe] = useState({
     username: userData?.username,
@@ -85,7 +87,24 @@ const ChatComponent = () => {
       authListener();
     };
   }, []);
-
+  useEffect(() => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          setNotificationPermission(true);
+        }
+      });
+    } else {
+      setNotificationPermission(true);
+    }
+  }, []);
+  const showNotification = (message) => {
+    if (notificationPermission) {
+      new Notification("New Message", {
+        body: message,
+      });
+    }
+  };
   const openImageModal = (imageUrl) => {
     setSelectedImageUrl(imageUrl);
   };
@@ -128,6 +147,7 @@ const ChatComponent = () => {
       room.on("message", (messageData) => {
         // Update state with the new message
         setMessages((prevMessages) => [...prevMessages, messageData]);
+        showNotification(messageData.text);
       });
 
       drone.on("error", (error) => console.error(error));
@@ -184,7 +204,7 @@ const ChatComponent = () => {
               maxWidth: "50%",
               height: "auto",
               cursor: "pointer",
-              "@media (max-width: 768px)": {
+              "@media (maxWidth: 768px)": {
                 // Adjust the values based on your preference
                 maxWidth: "40%",
               },
