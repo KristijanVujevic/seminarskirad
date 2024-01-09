@@ -9,7 +9,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import styles from "@/app/page.module.css";
 import ImageModal from "./ImageModal";
-import AudioPlayer from "react-h5-audio-player";
+
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
   var months = [
@@ -63,7 +63,7 @@ const ChatComponent = () => {
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const [visibleMessages, setVisibleMessages] = useState(20); // Adjust the initial number as needed
   const messagesContainerRef = useRef(null);
-  const [notificationPermission, setNotificationPermission] = useState(false);
+
   const [me, setMe] = useState({
     username: userData?.username,
     color: randomColor(),
@@ -78,32 +78,7 @@ const ChatComponent = () => {
       authListener();
     };
   }, []);
-  useEffect(() => {
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          setNotificationPermission(true);
-        }
-      });
-    } else {
-      setNotificationPermission(true);
-    }
-  }, []);
 
-  const showNotification = (messageData) => {
-    if (notificationPermission) {
-      if (Notification) {
-        console.log("Notification API is available");
-        new Notification("New Message", {
-          body:
-            `${messageData.data.sender} sent you: ${messageData.data.message}` ||
-            "Default notification text",
-        });
-      } else {
-        console.log("Notification API is not available");
-      }
-    }
-  };
   const openImageModal = (imageUrl) => {
     setSelectedImageUrl(imageUrl);
   };
@@ -143,7 +118,6 @@ const ChatComponent = () => {
       room.on("message", (messageData) => {
         // Update state with the new message
         setMessages((prevMessages) => [...prevMessages, messageData]);
-        showNotification(messageData);
       });
       drone.on("error", (error) => console.error(error));
       room.on("history_message", ({ data }) => {
