@@ -315,3 +315,12 @@
   color: gray;
   font-size: 14px;
 }
+.username {
+  color: gray;
+  font-size: 14px;
+}
+.avatar {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+}

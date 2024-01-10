@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Members from "./Members";
-import { useScaledrone } from "./ScaledroneContext";
+import { ScaledroneProvider, useScaledrone } from "./ScaledroneContext";
 import Link from "next/link";
 import { auth, firestore } from "@/app/Components/firebase";
 import UserInput from "./UserInput";
+
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
@@ -39,6 +40,7 @@ function timeConverter(UNIX_timestamp) {
 function randomColor() {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 }
+export { randomColor };
 const fetchUserData = async (user, setUserData) => {
   try {
     const doc = await firestore.collection("users").doc(user.uid).get();
