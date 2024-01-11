@@ -311,7 +311,7 @@ const ChatComponent = () => {
           }}
         >
           <Col>
-            <Link style={{ fontSize: "10vh " }} href={"/signin"}>
+            <Link style={{ fontSize: "8vh " }} href={"/signin"}>
               Sign in!
             </Link>
           </Col>
@@ -319,7 +319,7 @@ const ChatComponent = () => {
             <br />
           </Col>
           <Col>
-            <Link style={{ fontSize: "10vh " }} href={"/signup"}>
+            <Link style={{ fontSize: "8vh " }} href={"/signup"}>
               Create an account!
             </Link>
           </Col>
