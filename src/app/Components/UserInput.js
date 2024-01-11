@@ -1,13 +1,14 @@
 // Import necessary libraries and icons
 import React, { useState, useRef } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Dropdown } from "react-bootstrap";
 import {
   BsFillMicFill,
   BsFillImageFill,
   BsMicMuteFill,
   BsSendFill,
+  BsThreeDots,
 } from "react-icons/bs";
-import { auth, firestore, storage } from "@/app/Components/firebase"; // Adjust the path accordingly
+import { auth, firestore, storage } from "@/app/Components/firebase";
 import { useScaledrone } from "./ScaledroneContext";
 import { fetchUserData } from "./ChatComponent";
 
@@ -17,7 +18,12 @@ const UserInput = ({ user, setUserData, userData }) => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
+  const [showOptions, setShowOptions] = useState(false);
 
+  const toggleOptions = () => {
+    console.log(showOptions);
+    setShowOptions((prevShowOptions) => !prevShowOptions);
+  };
   // Function to handle sending text messages
   const sendTextMessage = async () => {
     const currentUser = auth.currentUser;
@@ -221,26 +227,32 @@ const UserInput = ({ user, setUserData, userData }) => {
         <Button variant="outline-success" type="submit">
           <BsSendFill />
         </Button>
-        {/* Button for starting recording */}
-        <Button
-          variant="outline-primary"
-          onClick={handleRecordStart}
-          disabled={isRecording}
-        >
-          {isRecording ? "Recording..." : ""}
-          <BsFillMicFill />
-        </Button>
-        {/* Button for stopping recording */}
-        <Button
-          variant="outline-danger"
-          onClick={handleRecordStop}
-          disabled={!isRecording}
-        >
-          <BsMicMuteFill />
-        </Button>
-        <Button variant="outline-warning" onClick={sendImageMessage}>
-          <BsFillImageFill />
-        </Button>
+
+        {/* Dropdown to toggle the visibility of additional options */}
+        <Dropdown drop="up" show={showOptions} onToggle={toggleOptions}>
+          <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+            <BsThreeDots />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={handleRecordStart}
+              disabled={isRecording}
+              style={{ color: "red" }}
+            >
+              <BsFillMicFill />
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={handleRecordStop}
+              disabled={!isRecording}
+              style={{ color: "red" }}
+            >
+              <BsMicMuteFill />
+            </Dropdown.Item>
+            <Dropdown.Item onClick={sendImageMessage} style={{ color: "red" }}>
+              <BsFillImageFill />
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </Form>
     </div>
   );

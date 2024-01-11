@@ -15,7 +15,6 @@ export const ScaledroneProvider = ({ children }) => {
 
       if (authUser) {
         fetchUserData(authUser, setUserData);
-        console.log(userData);
       }
     });
 
