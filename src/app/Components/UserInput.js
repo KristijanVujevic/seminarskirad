@@ -19,6 +19,11 @@ const UserInput = ({ user, setUserData, userData }) => {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
   const [showOptions, setShowOptions] = useState(false);
+  const recordingStartAudioRef = useRef(new Audio("/beep.mp3")); // Assuming beep.mp3 is in the public directory
+
+  const playRecordingStartSound = () => {
+    recordingStartAudioRef.current.play();
+  };
 
   const toggleOptions = () => {
     console.log(showOptions);
@@ -189,6 +194,9 @@ const UserInput = ({ user, setUserData, userData }) => {
         mediaRecorder.start();
         setIsRecording(true);
         mediaRecorderRef.current = mediaRecorder;
+
+        // Play the recording start sound
+        playRecordingStartSound();
       });
     } catch (error) {
       console.error("Error starting recording:", error);
