@@ -168,8 +168,8 @@ h1 {
     max-width: 90%;
   }
 }
-.dropdown-menu {
-  display: flex;
+.show > .dropdown-menu {
+  display: flex !important;
   flex-direction: column;
 
   background: linear-gradient(
@@ -181,4 +181,7 @@ h1 {
 }
 .dropdown-menu a {
   padding: 12px 14px;
+}
+.dropdown-menu {
+  display: none;
 }

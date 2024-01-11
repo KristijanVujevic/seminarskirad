@@ -1,4 +1,3 @@
-// Import necessary libraries and icons
 import React, { useState, useRef } from "react";
 import { Button, Form, Dropdown } from "react-bootstrap";
 import {
@@ -7,6 +6,7 @@ import {
   BsMicMuteFill,
   BsSendFill,
   BsThreeDots,
+  BsArrowDown,
 } from "react-icons/bs";
 import { auth, firestore, storage } from "@/app/Components/firebase";
 import { useScaledrone } from "./ScaledroneContext";
@@ -229,7 +229,12 @@ const UserInput = ({ user, setUserData, userData }) => {
         </Button>
 
         {/* Dropdown to toggle the visibility of additional options */}
-        <Dropdown drop="up" show={showOptions} onToggle={toggleOptions}>
+        <Dropdown
+          drop="up"
+          show={showOptions}
+          onToggle={toggleOptions}
+          className="custom-dropdown"
+        >
           <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
             <BsThreeDots />
           </Dropdown.Toggle>
