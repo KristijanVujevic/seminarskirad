@@ -4,7 +4,7 @@ import { ScaledroneProvider, useScaledrone } from "./ScaledroneContext";
 import Link from "next/link";
 import { auth, firestore } from "@/app/Components/firebase";
 import UserInput from "./UserInput";
-
+import Navbar from "react-bootstrap/Navbar";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
@@ -252,19 +252,32 @@ const ChatComponent = () => {
     <Container fluid className={styles.main}>
       {user ? (
         <Row className={styles.content} style={{ maxWidth: "100vw" }}>
-          {userData ? (
-            <Col style={{ display: "flex", justifyContent: "center" }}>
-              <h1>Logged in as: {userData.username}</h1>
-              <Button variant="danger" onClick={handleLogout}>
-                Logout
-              </Button>
-              {members && <Members members={members} me={me} />}
-            </Col>
-          ) : (
-            <Col>
-              <p className={styles.description}>Loading user data...</p>
-            </Col>
-          )}
+          <Navbar
+            className="bg-body-tertiary"
+            style={{
+              position: "fixed",
+              top: "0",
+              textAlign: "center",
+              width: "100vw",
+              background: "rgba(240, 84, 84, 0.301)",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {userData ? (
+              <Col style={{ display: "flex", alignItems: "baseline" }}>
+                <h1>Logged in as: {userData.username}</h1>
+                <Button variant="danger" onClick={handleLogout}>
+                  Logout
+                </Button>
+                {members && <Members members={members} me={me} />}
+              </Col>
+            ) : (
+              <Col>
+                <p className={styles.description}>Loading user data...</p>
+              </Col>
+            )}
+          </Navbar>
           <Col>
             <Col
               className={styles.messagesContainer}

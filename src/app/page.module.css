@@ -316,8 +316,8 @@
   font-size: 14px;
 }
 .username {
-  color: gray;
   font-size: 14px;
+  padding-left: 1vw;
 }
 .avatar {
   height: 35px;

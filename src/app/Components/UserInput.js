@@ -26,7 +26,6 @@ const UserInput = ({ user, setUserData, userData }) => {
   };
 
   const toggleOptions = () => {
-    console.log(showOptions);
     setShowOptions((prevShowOptions) => !prevShowOptions);
   };
   // Function to handle sending text messages
