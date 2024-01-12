@@ -230,7 +230,7 @@
 }
 .messagesContainer {
   max-width: 95%; /* Adjust as needed */
-  margin: 20px;
+  margin: 15vh 20px 25px;
 
   display: flex;
   flex-direction: column; /* Stack the chat bubbles vertically */

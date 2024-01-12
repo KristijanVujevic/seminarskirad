@@ -259,7 +259,7 @@ const ChatComponent = () => {
               top: "0",
               textAlign: "center",
               width: "100vw",
-              background: "rgba(240, 84, 84, 0.301)",
+              background: "rgba(240, 84, 84, 0.801)",
               display: "flex",
               justifyContent: "center",
             }}
