@@ -33,11 +33,17 @@ export const ScaledroneProvider = ({ children }) => {
   }, [memoizedFetchUserData]); // Now, only memoizedFetchUserData is a dependency, because when using a standard useData it retriggers this useEffect which will result in re-rendering the messages
 
   useEffect(() => {
+    // Only run the effect when userData is available
+    if (!userData) {
+      return;
+    }
+
     const scaledrone = new Scaledrone("8Rr4ZSUaGeqKIfXZ", {
-      data: { name: userData?.username, color: randomColor() },
+      data: { name: userData.username, color: randomColor() },
     });
+
     setDrone(scaledrone);
-    console.log("i triggered");
+
     return () => {
       scaledrone.close();
     };
