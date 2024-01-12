@@ -185,3 +185,7 @@ h1 {
 .dropdown-menu {
   display: none;
 }
+.member-inline {
+  display: inline-flex !important;
+  align-items: center;
+}

@@ -43,7 +43,7 @@ function Member({ id, clientData, isMe }) {
   const { color, name } = clientData;
 
   return (
-    <div key={id} className={styles.member}>
+    <div key={id} className="member-inline">
       <div className={styles.avatar} style={{ backgroundColor: color }} />
       <div className={styles.username}>
         {name} {isMe ? " (you)" : ""}
