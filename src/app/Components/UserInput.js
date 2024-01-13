@@ -242,10 +242,10 @@ const UserInput = ({ user, setUserData, userData }) => {
           onToggle={toggleOptions}
           className="custom-dropdown"
         >
-          <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+          <Dropdown.Toggle variant="outline-warning" id="dropdown-basic">
             <BsThreeDots />
           </Dropdown.Toggle>
-          <Dropdown.Menu>
+          <Dropdown.Menu renderOnMount="true">
             <Dropdown.Item
               onClick={handleRecordStart}
               disabled={isRecording}

@@ -262,6 +262,7 @@ const ChatComponent = () => {
               background: "rgba(240, 84, 84, 0.801)",
               display: "flex",
               justifyContent: "center",
+              zIndex: 1,
             }}
           >
             {userData ? (
