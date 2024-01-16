@@ -264,6 +264,7 @@
   padding: 10px;
   margin-bottom: 10px;
   word-wrap: break-word;
+
   max-width: 70%; /* Adjust as needed */
   align-self: flex-start;
 

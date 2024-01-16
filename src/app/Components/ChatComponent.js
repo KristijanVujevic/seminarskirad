@@ -168,11 +168,10 @@ const ChatComponent = () => {
             src={oldMessages.imageURL}
             alt="Image"
             style={{
-              maxWidth: "50%",
-              height: "auto",
+              width: "100%", // Set the image width to 100% of the containing div
+              height: "auto", // Maintain aspect ratio
               cursor: "pointer",
               "@media (maxWidth: 768px)": {
-                // Adjust the values based on your preference
                 maxWidth: "40%",
               },
             }}
