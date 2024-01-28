@@ -146,10 +146,13 @@ const ChatComponent = () => {
     if (!oldMessages) {
       return null;
     }
+
     const isMyMessage = oldMessages.uid === user?.uid;
     const timestamp = timeConverter(oldMessages.timestamp);
     const senderUsername = isMyMessage ? "You" : oldMessages.sender;
+
     let messageContent;
+
     if (oldMessages.audioURL) {
       // Handle voice message rendering
       messageContent = (
@@ -168,8 +171,8 @@ const ChatComponent = () => {
             src={oldMessages.imageURL}
             alt="Image"
             style={{
-              width: "100%", // Set the image width to 100% of the containing div
-              height: "auto", // Maintain aspect ratio
+              width: "100%",
+              height: "auto",
               cursor: "pointer",
               "@media (maxWidth: 768px)": {
                 maxWidth: "40%",
@@ -180,9 +183,35 @@ const ChatComponent = () => {
         </div>
       );
     } else {
-      // Handle text message rendering
-      messageContent = <p className="line-limit">{oldMessages.message}</p>;
+      // Handle text message rendering, check for links
+      const containsLink = /https?:\/\/\S+/i.test(oldMessages.message);
+      if (containsLink) {
+        messageContent = (
+          <p className="line-limit">
+            {oldMessages.message.split(" ").map((word, index) => {
+              if (/https?:\/\/\S+/i.test(word)) {
+                return (
+                  <a
+                    style={{ color: "purple" }}
+                    key={index}
+                    href={word}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}{" "}
+                  </a>
+                );
+              } else {
+                return <span key={index}>{word} </span>;
+              }
+            })}
+          </p>
+        );
+      } else {
+        messageContent = <p className="line-limit">{oldMessages.message}</p>;
+      }
     }
+
     return (
       <div
         key={oldMessages.msgId}
@@ -198,14 +227,18 @@ const ChatComponent = () => {
       </div>
     );
   };
+
   const renderSingleMessage = (message) => {
     if (!message) {
       return null;
     }
+
     const isMyMessage = message.data.uid === user?.uid;
     const timestamp = timeConverter(message.timestamp);
     const senderUsername = isMyMessage ? "You" : message.data.sender;
+
     let messageContent;
+
     if (message.data.audioURL) {
       // Handle voice message rendering
       messageContent = (
@@ -229,9 +262,35 @@ const ChatComponent = () => {
         </div>
       );
     } else {
-      // Handle text message rendering
-      messageContent = <p className="line-limit">{message.data.message}</p>;
+      // Handle text message rendering, check for links
+      const containsLink = /https?:\/\/\S+/i.test(message.data.message);
+      if (containsLink) {
+        messageContent = (
+          <p className="line-limit">
+            {message.data.message.split(" ").map((word, index) => {
+              if (/https?:\/\/\S+/i.test(word)) {
+                return (
+                  <a
+                    style={{ color: "purple" }}
+                    key={index}
+                    href={word}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}{" "}
+                  </a>
+                );
+              } else {
+                return <span key={index}>{word} </span>;
+              }
+            })}
+          </p>
+        );
+      } else {
+        messageContent = <p className="line-limit">{message.data.message}</p>;
+      }
     }
+
     return (
       <div
         key={message.id}
@@ -247,6 +306,7 @@ const ChatComponent = () => {
       </div>
     );
   };
+
   return (
     <Container fluid className={styles.main}>
       {user ? (
